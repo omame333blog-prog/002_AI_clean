@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レッスン3｜返信の基本ルールと文章の型｜日報返信マニュアル</title>
+  <style>
+    :root {
+      --main-orange: #f97948;
+      --main-orange-light: #fde8e0;
+      --main-orange-soft: #f9f2e2;
+      --accent-beige: #dccbb4;
+      --accent-peach: #e5a67c;
+      --text-main: #4a3f35;
+      --border-soft: #e8d9c8;
+    }
+
+    .lesson-utage {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background: var(--main-orange-soft);
+      color: var(--text-main);
+      padding: 32px 24px 40px;
+      border-radius: 18px;
+      max-width: 1040px;
+      margin: 24px auto;
+      box-sizing: border-box;
+      border: 1px solid var(--border-soft);
+    }
+
+    .lesson-utage-header {
+      background: linear-gradient(135deg, #e86a38, #f97948);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 20px 24px 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lesson-utage-header::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .lesson-utage-title {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+    }
+
+    .lesson-utage-subtitle {
+      font-size: 18px;
+      margin: 0;
+      opacity: 0.96;
+    }
+
+    .lesson-utage-badge {
+      display: inline-block;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      margin-bottom: 8px;
+    }
+
+    .lesson-utage-section-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 18px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lesson-utage-section-title span.emoji {
+      font-size: 24px;
+    }
+
+    .lesson-utage-card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .lesson-utage-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+      border: 1px solid var(--border-soft);
+      box-sizing: border-box;
+    }
+
+    .lesson-utage-card-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lesson-utage-card-header span.emoji {
+      font-size: 20px;
+    }
+
+    .lesson-utage-card p {
+      font-size: 19px;
+      line-height: 1.9;
+      margin: 4px 0 6px;
+    }
+
+    .lesson-utage-list {
+      margin: 4px 0 0 1.2em;
+      padding: 0;
+    }
+
+    .lesson-utage-list li {
+      font-size: 19px;
+      line-height: 1.9;
+      margin-bottom: 4px;
+    }
+
+    .lesson-utage-note {
+      font-size: 17px;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+
+    .lesson-utage-sample {
+      font-size: 18px;
+      padding: 14px 18px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 2px solid var(--main-orange);
+      margin: 12px 0;
+      line-height: 1.9;
+    }
+
+    .lesson-utage-sample .line {
+      margin-bottom: 6px;
+    }
+
+    .lesson-utage-sample .line:last-child {
+      margin-bottom: 0;
+    }
+
+    .lesson-utage-tip {
+      font-size: 16px;
+      padding: 10px 14px;
+      background: #fff9f6;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent-peach);
+      margin: 8px 0;
+    }
+
+    .ponnu-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .ponnu-icon {
+      flex: 0 0 72px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(74, 63, 53, 0.12);
+      background: #ffffff;
+    }
+
+    .ponnu-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ponnu-bubble {
+      position: relative;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 14px 12px;
+      border: 1px solid var(--border-soft);
+      max-width: 100%;
+    }
+
+    .ponnu-bubble::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent var(--border-soft) transparent transparent;
+    }
+
+    .ponnu-bubble::after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+    }
+
+    .ponnu-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--main-orange);
+      margin-bottom: 4px;
+    }
+
+    .ponnu-text {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 640px) {
+      .lesson-utage {
+        padding: 20px 14px 26px;
+      }
+      .ponnu-block {
+        align-items: center;
+      }
+      .ponnu-icon {
+        flex-basis: 60px;
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson-utage">
+    <header class="lesson-utage-header">
+      <div class="lesson-utage-badge">日報返信マニュアル｜Lesson 3</div>
+      <h1 class="lesson-utage-title">返信の基本ルールと文章の型</h1>
+      <p class="lesson-utage-subtitle">
+        毎回ゼロから考えなくてよい「型」と「分量の目安」をそろえます。
+      </p>
+    </header>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          返信は<strong>「挨拶＋BIGほめ＋締めのエール」</strong>の3行でOK。<br>
+          この型を守れば、短くてもちゃんと伝わるよ〜。
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📐</span><span>返信の基本ルール</span>
+    </h2>
+    <p class="lesson-utage-note">
+      日報返信のテーマは<strong>「変化」</strong>です。共感 → 変化を伝える → 自己肯定感が自然に上がる、という流れを意識し、常に「目標に向かえているか？」の視点を忘れないでください。
+    </p>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">✏️</span><span>文章の基本構成（3行の型）</span>
+    </h2>
+    <p class="lesson-utage-note">
+      日報を返すときは、次の3つで構成します。
+    </p>
+
+    <div class="lesson-utage-card-row">
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">①</span><span>最初の挨拶（1文）</span></div>
+        <p>
+          「おつかれさまです！」「今日も日報ありがとう〜！」など、短く1文で。
+        </p>
+      </div>
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">②</span><span>BIGほめポイント（1文）</span></div>
+        <p>
+          「変化の幅」や「行動の変化」を、一言で力強くほめます。
+        </p>
+      </div>
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">③</span><span>締めのエール＆次アクション（1文）</span></div>
+        <p>
+          具体的な「次の一歩」を提案しつつ、背中を押す一言で締めます。
+        </p>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📝</span><span>文章量の目安（サンプル）</span>
+    </h2>
+    <p class="lesson-utage-note">
+      以下のくらいの分量を目安にしてください。長くなっても<strong>この1.5倍まで</strong>に収めます。
+    </p>
+
+    <div class="lesson-utage-sample">
+      <div class="line">おつかれさまです！！</div>
+      <div class="line">リフレーミングできてるの最高！これできればマジであと何とでもなるから、最低１ヶ月は続けること！！！！</div>
+      <div class="line">今週も必ずやってみて〜〜〜！！！❤️</div>
+    </div>
+
+    <div class="lesson-utage-tip">
+      <strong>長すぎる返信はNG。</strong>「長くだらっと書くことが正解」と思わせてしまいます。実際は長ったらしい文章ほどわかりにくく、頭が整理できていない証拠。在宅ワークをしていく私たちにとって非常によくないので、<strong>ちょっと極端なくらい、明確に絞って</strong>返してください。それを続けることで「簡潔でわかりやすい文章がよい」という習慣づくりを進めたいです。
+    </div>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          シンプルな日報なら1〜2文で完結することもあるよ。<br>
+          悩みや方向性のズレがあるときだけ、必要に応じて少し長くしてOK〜。
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🎯</span><span>適切な返信のやり方（3つのポイント）</span>
+    </h2>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">1</span><span>最初に共感を一言だけ入れる</span></div>
+      <p>
+        「分かる！」「そうなんですね」「大変でしたね」など、短く。褒めるのではなく<strong>“共感”</strong>でOKです。
+      </p>
+    </div>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">2</span><span>変化をピンポイントで拾う</span></div>
+      <p>
+        本人がまだ気づいていない変化を言葉にします。「前よりスピード上がってるね」「学んだことを次に活かせてるね」など。
+      </p>
+    </div>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">3</span><span>分量の基準</span></div>
+      <p>
+        目標チェック ＋ 変化フィードバックができていれば十分。シンプルなら1〜2文で完結することもあります。悩みや方向性のズレがある場合は、必要に応じて長くなるのはOKです。
+      </p>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📈</span><span>「変化の幅」を拾うとは</span>
+    </h2>
+    <p class="lesson-utage-note">
+      ほめるときは、<strong>「前の自分からどう変わったか」</strong>（変化の幅）を意識して言葉にします。
+    </p>
+    <ul class="lesson-utage-list">
+      <li><strong>マイナス → ゼロ</strong>：落ち込んで止まっていたのが、また動き出せた</li>
+      <li><strong>ゼロ → プラス</strong>：日報が続くようになった、初めて課題に手をつけられた</li>
+      <li><strong>プラスの継続・加速</strong>：前よりスピードが上がっている、学んだことを次に活かせている</li>
+    </ul>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📌</span><span>補足：返信する対象の日報</span>
+    </h2>
+    <p class="lesson-utage-note">
+      日報返信は<strong>前日の内容に対してのみ</strong>行います。それより前の日報は、本人も何を書いたか覚えていないことが多いためです。
+    </p>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          この型で返し続けると、受講生にも<strong>「簡潔でわかりやすい文章がよい」</strong>っていう感覚が伝わっていくから、一石二鳥だよ〜。
+        </div>
+      </div>
+    </div>
+
+    <p class="lesson-utage-note" style="margin-top: 24px;">
+      次のレッスンでは、「日報返信の手順（フローとツール）」を整理していきます。
+    </p>
+  </div>
+</body>
+</html>

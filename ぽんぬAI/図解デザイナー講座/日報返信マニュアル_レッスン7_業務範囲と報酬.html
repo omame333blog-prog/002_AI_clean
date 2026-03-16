@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レッスン7｜日報サポーターの業務範囲と報酬｜日報返信マニュアル</title>
+  <style>
+    :root {
+      --main-orange: #f97948;
+      --main-orange-light: #fde8e0;
+      --main-orange-soft: #f9f2e2;
+      --accent-beige: #dccbb4;
+      --accent-peach: #e5a67c;
+      --text-main: #4a3f35;
+      --border-soft: #e8d9c8;
+    }
+
+    .lesson-utage {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background: var(--main-orange-soft);
+      color: var(--text-main);
+      padding: 32px 24px 40px;
+      border-radius: 18px;
+      max-width: 1040px;
+      margin: 24px auto;
+      box-sizing: border-box;
+      border: 1px solid var(--border-soft);
+    }
+
+    .lesson-utage-header {
+      background: linear-gradient(135deg, #e86a38, #f97948);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 20px 24px 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lesson-utage-header::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .lesson-utage-title {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+    }
+
+    .lesson-utage-subtitle {
+      font-size: 18px;
+      margin: 0;
+      opacity: 0.96;
+    }
+
+    .lesson-utage-badge {
+      display: inline-block;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      margin-bottom: 8px;
+    }
+
+    .lesson-utage-section-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 18px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lesson-utage-section-title span.emoji {
+      font-size: 24px;
+    }
+
+    .lesson-utage-card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .lesson-utage-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+      border: 1px solid var(--border-soft);
+      box-sizing: border-box;
+    }
+
+    .lesson-utage-card-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lesson-utage-card-header span.emoji {
+      font-size: 20px;
+    }
+
+    .lesson-utage-card p {
+      font-size: 19px;
+      line-height: 1.9;
+      margin: 4px 0 6px;
+    }
+
+    .lesson-utage-list {
+      margin: 4px 0 0 1.2em;
+      padding: 0;
+    }
+
+    .lesson-utage-list li {
+      font-size: 19px;
+      line-height: 1.9;
+      margin-bottom: 4px;
+    }
+
+    .lesson-utage-note {
+      font-size: 17px;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+
+    .lesson-utage-tip {
+      font-size: 16px;
+      padding: 10px 14px;
+      background: #fff9f6;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent-peach);
+      margin: 8px 0;
+    }
+
+    .lesson-utage-link {
+      font-size: 17px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      margin: 4px 0;
+    }
+
+    .lesson-utage-link a {
+      color: var(--main-orange);
+      text-decoration: none;
+    }
+
+    .lesson-utage-link a:hover {
+      text-decoration: underline;
+    }
+
+    .ponnu-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .ponnu-icon {
+      flex: 0 0 72px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(74, 63, 53, 0.12);
+      background: #ffffff;
+    }
+
+    .ponnu-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ponnu-bubble {
+      position: relative;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 14px 12px;
+      border: 1px solid var(--border-soft);
+      max-width: 100%;
+    }
+
+    .ponnu-bubble::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent var(--border-soft) transparent transparent;
+    }
+
+    .ponnu-bubble::after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+    }
+
+    .ponnu-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--main-orange);
+      margin-bottom: 4px;
+    }
+
+    .ponnu-text {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 640px) {
+      .lesson-utage {
+        padding: 20px 14px 26px;
+      }
+      .ponnu-block {
+        align-items: center;
+      }
+      .ponnu-icon {
+        flex-basis: 60px;
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson-utage">
+    <header class="lesson-utage-header">
+      <div class="lesson-utage-badge">日報返信マニュアル｜Lesson 7</div>
+      <h1 class="lesson-utage-title">日報サポーターの業務範囲と報酬</h1>
+      <p class="lesson-utage-subtitle">
+        日報返信・MVP選出を中心に、サポーターとしてお願いしている業務の全体像と、報酬・時間の目安をまとめます。
+      </p>
+    </header>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          報酬の計算方法とか詳しいことは、<strong>Loom動画</strong>とか<strong>運営マニュアル</strong>見てね。ここでは「何をやるか」「どのくらいの時間感覚か」をサクッと押さえておこう〜。
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📋</span><span>主な業務内容</span>
+    </h2>
+    <div class="lesson-utage-card">
+      <ul class="lesson-utage-list">
+        <li><strong>日報返信</strong>（週に1〜2回）<br>
+        レッスン1〜5の内容に沿って、担当メンバーの日報に返信します。返信テンプレ・ぽんぬのつぶやき一覧・よくある質問集を参照。</li>
+        <li><strong>週間MVP選出</strong>（毎週・担当部屋から選ぶ）<br>
+        レッスン6の内容に沿って、変化の幅が大きかった人を選び、Loom動画＋Discordテキストで発表します。</li>
+        <li><strong>初心者質問会</strong>（月4回・持ち回り）<br>
+        講座に入ったばかりの人向けに、活用法や質問に答える。メインまたはサブとして参加。</li>
+        <li><strong>もくもく作業会の担当</strong>（月2回）<br>
+        Zoomを開けて、みんなで作業する場を実施。</li>
+        <li><strong>交流会の積極的な開催</strong><br>
+        2時間で20人に返信するより、1時間で15人集まった交流会の方が密に関われます。お茶会や交流会を企画して、顔を合わせて話す機会を増やしましょう。月20時間の枠内で、返信以外にも交流会開催を検討してください。</li>
+        <li><strong>その他</strong>：質問返信、成果報告会のファシリ、ロードマップの格納（I列へ）、月末の非アクティブメンバーチェックなど。</li>
+      </ul>
+      <p class="lesson-utage-note">
+        詳細は【図解デザイナー講座】運営マニュアルを参照してください。
+      </p>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">⏱️</span><span>時間の目安（月20時間以内）</span>
+    </h2>
+    <div class="lesson-utage-card">
+      <p>
+        返信時間は<strong>「月20時間以内」</strong>を目安にします。1日報あたり1返信を全員に届けるのは現実的ではないので、「必要な人に必要なサポートが届いているか」を優先し、無理なく続けられるペースを保ってください。
+      </p>
+      <p class="lesson-utage-note">
+        1人5分程度を目安に、大事なところだけ絞って返す感覚でOKです。
+      </p>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">💰</span><span>報酬について</span>
+    </h2>
+    <p class="lesson-utage-note">
+      報酬の計算方法・請求の流れなどは、以下の資料で詳しく案内しています。ここでは概要のみ記載します。
+    </p>
+    <div class="lesson-utage-card">
+      <ul class="lesson-utage-list">
+        <li>日報返信：受け持ちメンバーで週1以上日報を出している人数に応じて計算（継続ボーナスあり）</li>
+        <li>初心者質問会・成果報告会・もくもく会など：1回あたりの報酬が別途設定</li>
+        <li>請求方法・締め日・フォーマットは運営マニュアルに沿って行う</li>
+      </ul>
+      <p class="lesson-utage-note">
+        千春さんが報酬を管理しています。月末に「今月の報酬」の連絡があるので、それに合わせて請求書を提出してください。
+      </p>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📅</span><span>日報返信チームMTG</span>
+    </h2>
+    <div class="lesson-utage-card">
+      <p>
+        <strong>毎月末（木）22時〜</strong>に、日報返信チームのMTGを実施しています。参加できる人が集まり、その月の振り返りや共有を行います。アーカイブも共有されるので、参加できなかった人も後から確認できます。
+      </p>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🔗</span><span>参考資料・リンク</span>
+    </h2>
+    <div class="lesson-utage-card">
+      <p class="lesson-utage-note">困ったときは以下の資料を参照してください。</p>
+      <div class="lesson-utage-link">【図解デザイナー講座】運営マニュアル（報酬・業務内容・非アクティブ対応など） <a href="https://docs.google.com/spreadsheets/d/1prUt9mjKy99uQJq3KeaRJki9pb_xDWrEFgp6GIWI7U4/edit?gid=473145205#gid=473145205" target="_blank" rel="noopener">スプレッドシート</a></div>
+      <div class="lesson-utage-link">日報返信の詳細フローと業務 <a href="https://docs.google.com/document/d/1rWyuQ4YPh17NYUlDOx9w-Y66gNiVWcgM-LnpxGMjyTM/edit?usp=sharing" target="_blank" rel="noopener">Googleドキュメント</a></div>
+      <div class="lesson-utage-link">【運営】日報サポーターガイドライン <a href="https://www.loom.com/share/7a535bc1e5644fc5bd04cf5bfc22a99c" target="_blank" rel="noopener">Loom</a></div>
+      <div class="lesson-utage-link">【日報】報酬計算方法解説 <a href="https://www.loom.com/share/41e1d1cafda94fc3898015b4bbfde980?sid=a4519c8f-8b28-4034-b6d7-44294f5e18b2" target="_blank" rel="noopener">Loom</a></div>
+    </div>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          分からないことあったら、日報返信チームのチャンネルで聞いてくれてOK。お互いに助け合いながら、一緒に運営していこうね〜。
+        </div>
+      </div>
+    </div>
+
+    <p class="lesson-utage-note" style="margin-top: 24px;">
+      以上で日報返信マニュアル（レッスン1〜7）の一通りの内容です。必要なときにこのマニュアルに戻って確認してください。
+    </p>
+  </div>
+</body>
+</html>

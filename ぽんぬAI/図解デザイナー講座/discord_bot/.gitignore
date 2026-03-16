@@ -1,0 +1,6 @@
+config.env
+日報チェック結果.csv
+__pycache__/
+*.pyc
+.venv/
+venv/

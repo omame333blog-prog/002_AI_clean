@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レッスン1｜日報返信の目的と全体像｜日報返信マニュアル</title>
+  <style>
+    :root {
+      --main-orange: #f97948;
+      --main-orange-light: #fde8e0;
+      --main-orange-soft: #f9f2e2;
+      --accent-beige: #dccbb4;
+      --accent-peach: #e5a67c;
+      --text-main: #4a3f35;
+      --border-soft: #e8d9c8;
+    }
+
+    .lesson-utage {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "YuGothic", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background: var(--main-orange-soft);
+      color: var(--text-main);
+      padding: 32px 24px 40px;
+      border-radius: 18px;
+      max-width: 1040px;
+      margin: 24px auto;
+      box-sizing: border-box;
+      border: 1px solid var(--border-soft);
+    }
+
+    .lesson-utage-header {
+      background: linear-gradient(135deg, #e86a38, #f97948);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 20px 24px 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lesson-utage-header::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .lesson-utage-title {
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+    }
+
+    .lesson-utage-subtitle {
+      font-size: 18px;
+      margin: 0;
+      opacity: 0.96;
+    }
+
+    .lesson-utage-badge {
+      display: inline-block;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      margin-bottom: 8px;
+    }
+
+    .lesson-utage-section-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 18px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lesson-utage-section-title span.emoji {
+      font-size: 24px;
+    }
+
+    .lesson-utage-card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .lesson-utage-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+      border: 1px solid var(--border-soft);
+      box-sizing: border-box;
+    }
+
+    .lesson-utage-card-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lesson-utage-card-header span.emoji {
+      font-size: 20px;
+    }
+
+    .lesson-utage-card p {
+      font-size: 19px;
+      line-height: 1.9;
+      margin: 4px 0 6px;
+    }
+
+    .lesson-utage-list {
+      margin: 4px 0 0 1.2em;
+      padding: 0;
+    }
+
+    .lesson-utage-list li {
+      font-size: 19px;
+      line-height: 1.9;
+      margin-bottom: 4px;
+    }
+
+    .lesson-utage-pill {
+      display: inline-block;
+      font-size: 15px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--main-orange-light);
+      color: var(--text-main);
+      margin: 2px 6px 4px 0;
+    }
+
+    .lesson-utage-note {
+      font-size: 17px;
+      line-height: 1.8;
+      opacity: 0.9;
+    }
+
+    .ponnu-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 18px 0 10px;
+    }
+
+    .ponnu-icon {
+      flex: 0 0 72px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(74, 63, 53, 0.12);
+      background: #ffffff;
+    }
+
+    .ponnu-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ponnu-bubble {
+      position: relative;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 14px 12px;
+      border: 1px solid var(--border-soft);
+      max-width: 100%;
+    }
+
+    .ponnu-bubble::before {
+      content: "";
+      position: absolute;
+      left: -10px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent var(--border-soft) transparent transparent;
+    }
+
+    .ponnu-bubble::after {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 18px;
+      border-width: 10px;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
+    }
+
+    .ponnu-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--main-orange);
+      margin-bottom: 4px;
+    }
+
+    .ponnu-text {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 640px) {
+      .lesson-utage {
+        padding: 20px 14px 26px;
+      }
+      .ponnu-block {
+        align-items: center;
+      }
+      .ponnu-icon {
+        flex-basis: 60px;
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="lesson-utage">
+    <header class="lesson-utage-header">
+      <div class="lesson-utage-badge">日報返信マニュアル｜Lesson 1</div>
+      <h1 class="lesson-utage-title">日報返信の目的と全体像</h1>
+      <p class="lesson-utage-subtitle">
+        「なんで日報に返信するのか？」を、まずここでサクッとそろえておきましょう。
+      </p>
+    </header>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          日報返信は「今日もおつかれ〜！」じゃなくて、<br>
+          <strong>在宅ワーク・収益化に向けた“変化”を一緒に見つけてあげる時間</strong>だよ〜。
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">📌</span><span>このレッスンでわかること</span>
+    </h2>
+    <div class="lesson-utage-card-row">
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">🎯</span><span>何のために返信する？</span></div>
+        <p>
+          図解デザイナー講座での日報返信の「ゴール」と「役割」が分かります。
+        </p>
+        <span class="lesson-utage-pill">在宅ワーク・収益化</span>
+        <span class="lesson-utage-pill">変化への気づき</span>
+        <span class="lesson-utage-pill">自己肯定感の循環</span>
+      </div>
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">👥</span><span>サポーターの立ち位置</span></div>
+        <p>
+          「なんでも相談窓口」ではなく、<strong>一緒に考える伴走者</strong>としてのスタンスをそろえます。
+        </p>
+        <span class="lesson-utage-pill">寄り添う</span>
+        <span class="lesson-utage-pill">依存させない</span>
+        <span class="lesson-utage-pill">最終的には自走へ</span>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🎯</span><span>1-1 日報返信のゴール（3つ）</span>
+    </h2>
+    <p class="lesson-utage-note">
+      日報返信のゴールは、
+      <strong>「在宅ワーク・収益化というゴールに向かう行動を、続けられる状態を一緒に育てること」</strong>
+      です。具体的には、次の3つを押さえます。
+    </p>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">①</span><span>目標に向かえているか、一緒に確認する</span></div>
+      <p>
+        「今日は作業できました／できませんでした」で終わらせず、
+        <strong>その行動がゴールにどうつながるか</strong> を一緒に見ます。
+      </p>
+      <ul class="lesson-utage-list">
+        <li>例：「今日のアウトプットは、ポートフォリオづくりの土台になるところだね」</li>
+        <li>例：「ここまでできていれば、初案件に応募する準備がかなり進んできるよ」</li>
+      </ul>
+    </div>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">②</span><span>本人が気づきにくい“小さな変化”を言葉にする</span></div>
+      <p>
+        受講生は、自分の変化に気づきにくいです。前との違いを、具体的な言葉で伝えます。
+      </p>
+      <ul class="lesson-utage-list">
+        <li>例：「先週は日報が出せてなかったけど、今週は毎日出せてるのすごい！」</li>
+        <li>例：「前は『怖い』って言ってた課題に、今日はちゃんと手をつけられてるね」</li>
+      </ul>
+    </div>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">③</span><span>自己肯定感と行動の“好循環”をつくる</span></div>
+      <p>
+        小さな変化に気づく → 「私、ちゃんと進めてるかも」と思える → もう一歩進みたくなる。
+      </p>
+      <p>
+        この循環をつくるために、「ちゃんと前に進めてるよ」「ここまでできてるから大丈夫」という言葉を、
+        <strong>短く・具体的に</strong> 返していきます。
+      </p>
+    </div>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          「できた／できない」を見るんじゃなくて、<br>
+          <strong>「前の自分からどう変わったか」</strong> を一緒に発見してあげるイメージだよ〜。
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🗂️</span><span>1-2 図解デザイナー講座における日報の位置づけ</span>
+    </h2>
+    <p class="lesson-utage-note">
+      図解デザイナー講座のビジョンは、
+      <strong>「在宅ワークを当たり前に選べる世界へ」</strong>
+      。その中で、日報はこんな役割を持っています。
+    </p>
+
+    <div class="lesson-utage-card-row">
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">📝</span><span>思考の棚</span></div>
+        <p>
+          今日やったこと・できなかったこと・もやもやを一度外に出す場所。
+        </p>
+      </div>
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">📊</span><span>変化のログ帳</span></div>
+        <p>
+          書き続けることで、「1ヶ月前の自分」と比べたときの変化が見えるようになります。
+        </p>
+      </div>
+      <div class="lesson-utage-card">
+        <div class="lesson-utage-card-header"><span class="emoji">🫶</span><span>本音を出せるセーフゾーン</span></div>
+        <p>
+          「できませんでした」「怖いです」といった本音もOK。<br>
+          そのうえで「じゃあどうする？」を一緒に考える前提です。
+        </p>
+      </div>
+    </div>
+
+    <p class="lesson-utage-note">
+      日報返信は、この日報という仕組みを通して、
+      <strong>「必要な人に、必要なタイミングで、必要なサポートが届くようにする接点」</strong>
+      だと考えてください。
+    </p>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🤝</span><span>1-3 サポートメンバーとしてのスタンス</span>
+    </h2>
+
+    <div class="lesson-utage-card">
+      <div class="lesson-utage-card-header"><span class="emoji">🌱</span><span>寄り添いながらも、最終的には“見守り感ゼロ”へ</span></div>
+      <ul class="lesson-utage-list">
+        <li>
+          <strong>寄り添うけれど、依存させない</strong><br>
+          辛さ・不安には共感しつつ、「でも、在宅ワークしたいんだよね？」とゴールに戻します。<br>
+          例：「それは不安になるよね。でも在宅ワークしたいって気持ちは変わってないと思うから、今日は“これだけはやる”を一個だけ決めてみよっか。」
+        </li>
+        <li>
+          <strong>“なんでも相談窓口”ではなく“一緒に考える伴走者”</strong><br>
+          サポーターが全部決めるのではなく、受講生自身が「次どうするか」を選べるような問いかけを意識します。
+        </li>
+        <li>
+          <strong>最終的には自走できる状態へ</strong><br>
+          「返信がないと動けない」状態から、「返信がなくても自分で考えて動ける」状態へ少しずつ移行していくイメージです。
+        </li>
+      </ul>
+    </div>
+
+    <div class="ponnu-block">
+      <div class="ponnu-icon">
+        <img src="https://utagesystem.s3.ap-northeast-1.amazonaws.com/gibOeM9NLBt7/EI1xmobY1uBHnT1zs66Olv0EcSAWgcU9rIt2MnBx.jpg" alt="ぽんぬ">
+      </div>
+      <div class="ponnu-bubble">
+        <div class="ponnu-name">ぽんぬ</div>
+        <div class="ponnu-text">
+          迷ったら「この返信、ゴールに近づく声かけになってる？」って<br>
+          このレッスンに戻ってきてもらえたら嬉しいです〜！
+        </div>
+      </div>
+    </div>
+
+    <h2 class="lesson-utage-section-title">
+      <span class="emoji">🧭</span><span>1-4 このレッスンの使い方</span>
+    </h2>
+    <div class="lesson-utage-card">
+      <p class="lesson-utage-note">
+        ・日報返信に迷ったときは、
+        <strong>「この返信は、受講生のゴール（在宅ワーク・収益化）に近づく言葉になっているか？」</strong>
+        を確認するチェックリストとして使ってください。<br>
+        ・新しく日報サポーターとして入ったメンバーには、まずこのレッスン1だけでも読んでもらうと、
+        「何のために日報返信をするのか」の認識をそろえやすくなります。
+      </p>
+      <p class="lesson-utage-note">
+        次のレッスンでは、「やってはいけないこと（NG）」と「返信の基本ルール・文章の型」を具体的に整理していきます。
+      </p>
+    </div>
+  </div>
+</body>
+</html>

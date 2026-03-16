@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(pip3 install *)",
+      "Bash(open *.png)",
+      "Bash(open *.html)",
+      "Bash(mkdir -p *)",
+      "Bash(wc -l '/Users/kasaimami/Documents/アンチグラビティ/クロードコード/Discord3月/Discord_chat_Sun Feb 01 2026 00_00_00 GMT+0900 \\(日本標準時\\)_Sat Feb 28 2026 00_00_00 GMT+0900 \\(日本標準時\\).csv')",
+      "Bash(python3 '/Users/kasaimami/Documents/アンチグラビティ/クロードコード/Discord3月/parse_csv_reminder.py' 2>&1)",
+      "Bash(python3 -c \"\nimport csv\npath = '/Users/kasaimami/Documents/アンチグラビティ/クロードコード/Discord3月/Discord_chat_Sun Feb 01 2026 00_00_00 GMT+0900 \\(日本標準時\\)_Sat Feb 28 2026 00_00_00 GMT+0900 \\(日本標準時\\).csv'\nwith open\\(path, encoding='utf-8'\\) as f:\n    reader = csv.DictReader\\(f\\)\n    for i, row in enumerate\\(reader\\):\n        print\\(dict\\(row\\)\\)\n        if i >= 2: break\n\" 2>&1)",
+      "Bash(open '/Users/kasaimami/Documents/アンチグラビティ/クロードコード/Discord3月/リマインド一覧.html')"
+    ]
+  }
+}

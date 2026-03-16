@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>図解案件の全体像が見える。実際に来る依頼とは？｜勉強会スライド</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-teal: #2d7a7a;
+      --main-teal-dark: #1f5c5c;
+      --main-teal-light: #3d9b9b;
+      --teal-pale: #e8f5f5;
+      --teal-soft: #b8dcdc;
+      --accent-mint: #f0fafa;
+      --accent-orange: #f97948;
+      --accent-orange-light: #fde8e0;
+      --text-main: #2d4a4a;
+      --text-sub: #4d6a6a;
+      --border-soft: #c8e0e0;
+      --teal-dark: #1f5c5c;
+      --success-green: #2d9b7a;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--accent-mint);
+      color: var(--text-main);
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--main-teal-dark), var(--main-teal));
+      color: var(--white);
+      padding: 48px 32px 56px;
+      text-align: center;
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 40px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 13px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 999px;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero p {
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    /* Section */
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .section-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--main-teal-light);
+      color: var(--white);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 2px 8px rgba(74,63,53,0.04);
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 実案件の種類 - フローチャート風 */
+    .case-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .case-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px dashed var(--border-soft);
+    }
+
+    .case-item:last-child {
+      border-bottom: none;
+    }
+
+    .case-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: var(--teal-pale);
+      color: var(--main-teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .case-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .case-content p {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    .case-highlight .case-number {
+      background: var(--accent-orange);
+      color: var(--white);
+    }
+
+    /* 段階別スキルマップ - タイムライン風 */
+    .skill-timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+
+    .skill-timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--main-teal), var(--main-teal-light));
+      border-radius: 2px;
+    }
+
+    .skill-step {
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .skill-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-step::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      background: var(--main-teal);
+      border-radius: 50%;
+      border: 3px solid var(--white);
+      box-shadow: 0 0 0 1px var(--main-teal);
+    }
+
+    .skill-step-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 18px 20px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .skill-step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .skill-step-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      background: var(--accent-orange-light);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .skill-step-type {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .skill-step-skill {
+      font-size: 14px;
+      color: var(--text-sub);
+      padding-left: 4px;
+    }
+
+    /* 巻き取る価値 - Before/After */
+    .maki-tori-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 24px 0;
+    }
+
+    @media (max-width: 600px) {
+      .maki-tori-flow {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .flow-box {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px;
+      border: 2px solid var(--border-soft);
+      text-align: center;
+    }
+
+    .flow-box.before {
+      border-color: #d4c4b0;
+    }
+
+    .flow-box.after {
+      border-color: var(--accent-orange);
+      background: var(--accent-orange-light);
+    }
+
+    .flow-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+    }
+
+    .flow-box.after .flow-label {
+      color: var(--accent-orange);
+    }
+
+    .flow-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .flow-desc {
+      font-size: 13px;
+      color: var(--text-sub);
+    }
+
+    .flow-arrow {
+      font-size: 24px;
+      color: var(--accent-orange);
+    }
+
+    @media (max-width: 600px) {
+      .flow-arrow { transform: rotate(90deg); }
+    }
+
+    /* 巻き取りの練習素材 - 図解風 */
+    .practice-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .practice-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 16px;
+      background: var(--white);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      min-width: 140px;
+    }
+
+    .practice-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--teal-pale);
+      color: var(--main-teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .practice-label {
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .practice-arrow {
+      font-size: 20px;
+      color: var(--main-teal);
+    }
+
+    /* ChaPPy比較 */
+    .chappy-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 560px) {
+      .chappy-compare {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-box {
+      padding: 20px;
+      border-radius: 14px;
+      border: 2px solid;
+    }
+
+    .compare-box.ng {
+      border-color: #d4b8a8;
+      background: #faf6f2;
+    }
+
+    .compare-box.ok {
+      border-color: var(--accent-orange);
+      background: var(--accent-orange-light);
+    }
+
+    .compare-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-box.ng .compare-title { color: #8b7355; }
+    .compare-box.ok .compare-title { color: var(--accent-orange); }
+
+    .compare-list {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    .compare-list li {
+      margin-bottom: 6px;
+      padding-left: 1em;
+    }
+
+    /* 実践の流れ */
+    .practice-steps {
+      counter-reset: step;
+    }
+
+    .practice-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .practice-step::before {
+      counter-increment: step;
+      content: counter(step);
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: var(--accent-orange);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .practice-step-content h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .practice-step-content p {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* 問いかけボックス */
+    .question-box {
+      background: linear-gradient(135deg, #f8fcfc, var(--teal-pale));
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--teal-soft);
+      margin: 20px 0;
+    }
+
+    .question-box h4 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .question-box ul {
+      margin-left: 1.2em;
+      font-size: 14px;
+    }
+
+    .question-box li {
+      margin-bottom: 6px;
+    }
+
+    /* 補足 */
+    .note-box {
+      font-size: 14px;
+      color: var(--text-sub);
+      padding: 16px;
+      background: #f5fafa;
+      border-radius: 10px;
+      margin-top: 16px;
+      border-left: 4px solid var(--main-teal-light);
+    }
+
+    /* リスト */
+    ul.list-check {
+      list-style: none;
+      margin: 12px 0;
+    }
+
+    ul.list-check li {
+      padding: 8px 0 8px 32px;
+      position: relative;
+    }
+
+    ul.list-check li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent-orange);
+      font-weight: 700;
+    }
+
+    /* CTA */
+    .cta-box {
+      text-align: center;
+      padding: 32px 24px;
+      background: var(--white);
+      border-radius: 16px;
+      border: 2px solid var(--accent-orange);
+      margin-top: 40px;
+    }
+
+    .cta-box p {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    /* 大事な文字はオレンジ */
+    strong {
+      color: var(--accent-orange);
+    }
+
+    /* 参考リンク */
+    .link-list {
+      margin: 20px 0;
+    }
+
+    .link-item {
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      background: var(--accent-mint);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .link-item-main {
+      display: block;
+      color: var(--main-teal);
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .link-item-main:hover {
+      opacity: 0.8;
+    }
+
+    .link-item-url {
+      margin-top: 8px;
+    }
+
+    .link-item-url span {
+      font-size: 11px;
+      color: var(--text-sub);
+      word-break: break-all;
+      font-family: monospace;
+      user-select: all;
+      -webkit-user-select: all;
+    }
+
+    /* おまめブロック（自己紹介） */
+    .omae-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .omae-icon {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: var(--teal-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--main-teal);
+      border: 2px solid var(--border-soft);
+    }
+
+    .omae-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .omae-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-orange);
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-badge">図解デザイナー講座 勉強会</div>
+      <h1>図解案件の全体像が見える。<br>実際に来る依頼とは？</h1>
+      <p>どんな依頼が来るのかイメージをつかみ、今の自主制作に活かす</p>
+    </header>
+
+    <!-- はじめに -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">✍️</div>
+        <h2 class="section-title">まずは考えてみましょう</h2>
+      </div>
+      <div class="card">
+        <p style="margin-bottom: 16px;">今日のテーマは<strong>「図解案件の全体像が見える。実際に来る依頼とは？」</strong>です。まずは<strong>実際にどんな案件が来るのか</strong>、その全体像をお伝えしていきます。</p>
+        <p style="margin-bottom: 16px;">案件のイメージがついたら、<strong>自主制作ではどんな練習をするとよいか</strong>にも触れていきます。</p>
+      </div>
+      <div class="question-box">
+        <h4>📌 自分に問いかけてみよう</h4>
+        <ul>
+          <li><strong>Q1</strong> 「実際に来る案件」について、いま不安に思っていること・イメージが湧かないことはどこですか？</li>
+          <li><strong>Q2</strong> どんな案件が来るかイメージできるようになると、自分にとってどんないいことがありそうですか？</li>
+        </ul>
+        <p style="margin-top: 12px; font-size: 13px;">👉 この問いで「今日学ぶ意味」を自分の中で納得してください。</p>
+      </div>
+
+      <!-- 自己紹介 -->
+      <div class="section-header" style="margin-top: 32px;">
+        <div class="section-icon">👋</div>
+        <h2 class="section-title">自己紹介</h2>
+      </div>
+      <div class="card">
+        <div class="omae-block">
+          <div class="omae-icon">
+            <span>お</span>
+          </div>
+          <div>
+            <div class="omae-name">おまめ</div>
+          </div>
+        </div>
+        <h3 style="font-size: 15px; margin-bottom: 12px; color: var(--accent-orange);">講座に入る前</h3>
+        <ul class="list-check">
+          <li>2023年、インスタのフィード投稿の仕事をしていた</li>
+          <li>「スライドを作ってほしい」と言われてスライド制作を開始</li>
+          <li>クラウドワークスで「Xの図解を作ってほしい」という依頼も</li>
+          <li>最初は文字だけのスライド・図解。<strong>台本から作るだけ</strong>だった</li>
+        </ul>
+
+        <h3 style="font-size: 15px; margin: 24px 0 12px; color: var(--accent-orange);">転機：インスタインフルエンサー向けの配布資料</h3>
+        <ul class="list-check">
+          <li>インフルエンサーが集まるコミュニティのツテから依頼が来るように</li>
+          <li>「配布用の特典を作ってほしい」→ 合計20〜30個ほど制作</li>
+          <li>クライアントのタイプ：台本をしっかり作ってくれる人、構成だけ渡して「参考はここ」「足りないところ調べて」という人</li>
+          <li><strong>内包（デザイン）だけではなく、自分から資料を組み立てていく</strong>経験を積んだ</li>
+          <li>参考に渡されたネットの情報は絶対に足りない→ 他のところからも拾ってくる</li>
+        </ul>
+
+        <h3 style="font-size: 15px; margin: 24px 0 12px; color: var(--accent-orange);">その他の案件経験</h3>
+        <ul class="list-check">
+          <li>ぽんぬさんの案件：過去の講座勉強会・セミナーを文字起こし→スライド化</li>
+          <li>X図解：「既存のブログから抜き出して作ってください」タイプ</li>
+        </ul>
+
+        <div class="note-box" style="margin-top: 20px;">
+          <strong>振り返りと、この勉強会をやる理由</strong><br>
+          2年ほど試行錯誤してきた。最初からうまくできたわけではない。当時はガムシャラにやっていて「こんな案件もあるんだ」と後から気づくことが多かった。<strong>あらかじめ想像できていれば</strong>「こういう時はこうすればいい」とわかる。自主制作のときに「こういう依頼の時に備えて練習しておこう」ができる。だから、今日はその「想像」を一緒にしていきたい。
+        </div>
+      </div>
+    </section>
+
+    <!-- 実際に来る案件の種類 -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <h2 class="section-title">実際に来る案件の種類</h2>
+      </div>
+      <div class="card">
+        <p class="note-box" style="margin-top: 0;">実案件では「すでにある音声・スライド・テキスト」を渡されて図解化することが多い</p>
+        <div class="case-flow">
+          <div class="case-item">
+            <div class="case-number">1</div>
+            <div class="case-content">
+              <h4>Xポストの図解化</h4>
+              <p>長文投稿 → スライドに変換</p>
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-number">2</div>
+            <div class="case-content">
+              <h4>セミナー・講座スライド</h4>
+              <p>台本からスライド分割・構成</p>
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-number">3</div>
+            <div class="case-content">
+              <h4>営業資料</h4>
+              <p>チラシ、プレゼン資料</p>
+            </div>
+          </div>
+          <div class="case-item">
+            <div class="case-number">4</div>
+            <div class="case-content">
+              <h4>動画の文字起こし→図解化</h4>
+              <p>講座勉強会動画、YouTubeなど</p>
+            </div>
+          </div>
+          <div class="case-item case-highlight">
+            <div class="case-number">5</div>
+            <div class="case-content">
+              <h4>長尺動画を1枚にギュッとまとめる</h4>
+              <p>サムネ・まとめ図解など ※難易度高い</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-box" style="margin-top: 20px;">
+        <h4>💬 参加しているみなさんへ</h4>
+        <p style="font-size: 15px; margin: 0;"><strong>どんな案件をしたことがありますか？</strong></p>
+        <p style="font-size: 13px; color: var(--text-sub); margin-top: 8px;">チャットや声で一言、シェアしてみてください</p>
+      </div>
+    </section>
+
+    <!-- 段階別スキルマップ -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">🗺️</div>
+        <h2 class="section-title">段階別スキルマップ</h2>
+      </div>
+      <div class="card">
+        <p style="margin-bottom: 24px;">図解デザイナーとしての成長は、以下のような段階を踏んでいきます。</p>
+        <div class="skill-timeline">
+          <div class="skill-step">
+            <div class="skill-step-card">
+              <div class="skill-step-header">
+                <span class="skill-step-num">STEP 1</span>
+                <span class="skill-step-type">チャッピー台本→図解</span>
+              </div>
+              <p class="skill-step-skill">必要なスキル：ツール慣れ</p>
+            </div>
+          </div>
+          <div class="skill-step">
+            <div class="skill-step-card">
+              <div class="skill-step-header">
+                <span class="skill-step-num">STEP 2</span>
+                <span class="skill-step-type">Xポスト・台本ありの図解・スライド</span>
+              </div>
+              <p class="skill-step-skill">必要なスキル：既存文章の分割・要約</p>
+            </div>
+          </div>
+          <div class="skill-step">
+            <div class="skill-step-card">
+              <div class="skill-step-header">
+                <span class="skill-step-num">STEP 3</span>
+                <span class="skill-step-type">講座スタエフ・動画の文字起こし→図解</span>
+              </div>
+              <p class="skill-step-skill">必要なスキル：文字起こし→要約→構成→スライド</p>
+            </div>
+          </div>
+          <div class="skill-step">
+            <div class="skill-step-card">
+              <div class="skill-step-header">
+                <span class="skill-step-num">STEP 4</span>
+                <span class="skill-step-type">コンテンツの構成を考える</span>
+              </div>
+              <p class="skill-step-skill">必要なスキル：台本の塊分け・ステップ設計・トンマナ</p>
+            </div>
+          </div>
+          <div class="skill-step">
+            <div class="skill-step-card">
+              <div class="skill-step-header">
+                <span class="skill-step-num">STEP 5</span>
+                <span class="skill-step-type">長尺動画の図解（複数枚 or 1枚にまとめる）</span>
+              </div>
+              <p class="skill-step-skill">必要なスキル：長尺の構成理解・優先度づけ・<strong>関係性を1枚で表す力</strong></p>
+              <div class="note-box">
+                <strong>段階5のポイント：</strong>本当に必要なところだけを抽出しつつ全体を包囲して図解化。ただの箇条書きでは難しい。枚数は1枚だが難易度は高い。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 巻き取ることの価値 -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">💡</div>
+        <h2 class="section-title">「巻き取る」ことの価値</h2>
+      </div>
+      <div class="card">
+        <p>依頼する側（クライアント）も最初は<strong>何を用意したらいいかわからない</strong>→ 台本を渡してくれることが多いです。でも<strong>「素材だけ渡してコンテンツができる」</strong>まで巻き取れると、クライアントはだいぶ楽になります。</p>
+        <p style="margin-top: 16px;">まだまだの段階の人にはハードルが高く感じるかもしれません。まずは<strong>コンテンツを作るにはこの工程がある</strong>ことを理解しておくだけでOKです。</p>
+        <ul class="list-check" style="margin-top: 12px;">
+          <li>自分がやらなくても理解しておけば、「構成でこここうしましょうか」と提案ができるかも</li>
+          <li>そのあと「今度やっておきます」と言えるかも</li>
+          <li>クライアントも「任せてみようかな」と思ってもらえるかも</li>
+        </ul>
+        <div class="maki-tori-flow" style="margin-top: 20px;">
+          <div class="flow-box before">
+            <div class="flow-label">BEFORE</div>
+            <div class="flow-title">クライアントが大変</div>
+            <div class="flow-desc">台本を用意<br>AIに指示するやりとりも面倒</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box after">
+            <div class="flow-label">AFTER</div>
+            <div class="flow-title">素材だけ渡せばOK</div>
+            <div class="flow-desc">理解→提案→巻き取り<br>段階を踏んでいける</div>
+          </div>
+        </div>
+        <p style="margin-top: 16px;">巻き取れるようになると<strong>単価も上がる</strong>。「ここまでやってくれるんだ」と思ってもらえます。でも、まずは「この工程がある」と知っておくところからで大丈夫です。</p>
+      </div>
+    </section>
+
+    <!-- 巻き取りの練習素材 -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">📚</div>
+        <h2 class="section-title">巻き取りの練習素材</h2>
+      </div>
+      <div class="card">
+        <p>チャッピーで台本を作るのも大事だけど、実案件では「すでにある音声・テキスト」を渡されることが多い。だから自主制作では、<strong>素材からコンテンツまで巻き取る</strong>流れを練習するといい。</p>
+        <div class="practice-flow">
+          <div class="practice-item">
+            <div class="practice-icon">🎧</div>
+            <div class="practice-label">ぽんぬのつぶやき<br>（音声）</div>
+          </div>
+          <div class="practice-arrow">→</div>
+          <div class="practice-item">
+            <div class="practice-icon">📝</div>
+            <div class="practice-label">文字起こし<br>要約・構成</div>
+          </div>
+          <div class="practice-arrow">→</div>
+          <div class="practice-item">
+            <div class="practice-icon">📊</div>
+            <div class="practice-label">図解化</div>
+          </div>
+        </div>
+        <p><strong>講座勉強会のスライド・内容</strong> → 自分で図解化し直す練習もおすすめです。</p>
+      </div>
+    </section>
+
+    <!-- ChaPPy・AIとの向き合い方 -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">🤖</div>
+        <h2 class="section-title">ChaPPy・AIとの向き合い方</h2>
+      </div>
+      <div class="card">
+        <p style="margin-bottom: 20px; font-weight: 600;">ChaPPyに「こういうのを出して」ではなく、<strong>すでにあるネタを持ってきた方がいい</strong></p>
+        <div class="chappy-compare">
+          <div class="compare-box ng">
+            <div class="compare-title">❌ ChaPPyが考え出したもの</div>
+            <ul class="compare-list">
+              <li>これがいいのか悪いのか判断しづらい</li>
+              <li>クライアントを想定しているかわからない</li>
+            </ul>
+          </div>
+          <div class="compare-box ok">
+            <div class="compare-title">◎ すでにあるもの</div>
+            <ul class="compare-list">
+              <li>「本当にこう言っていたな」と確認しやすい</li>
+              <li><strong>裏が取りやすい</strong></li>
+              <li>ぽんぬのつぶやき・講座勉強会は素材として使える</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note-box">著作権には注意。ぽんぬさんのコンテンツはOKとのこと。実案件では「渡された素材」を図解化するので、自主制作でも<strong>既存のコンテンツを素材にする</strong>練習が合っています。</p>
+      </div>
+    </section>
+
+    <!-- ワーク：自分の段階を振り返る -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">🔄</div>
+        <h2 class="section-title">ワーク：自分の今の自主制作はどの段階？</h2>
+      </div>
+      <div class="card">
+        <ul class="list-check">
+          <li>今自分がやっている自主制作が、上記マップのどの段階に当たるか振り返る</li>
+          <li>次に挑戦しやすい「ひとつ上の段階」を決める</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 実践の流れ -->
+    <section>
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <h2 class="section-title">実践：トークスクリプトから作る練習</h2>
+      </div>
+      <div class="card">
+        <h3 style="font-size: 16px; margin-bottom: 12px;">使用素材：ぽんぬのつぶやき「スライドの単価と単価基準の見極め」</h3>
+        <p style="margin-bottom: 12px;">内容：スライド単価（500円→1000〜1500円）、図解と文字の見分け方、値上げの基準、ポッチャンセミナーの具体例</p>
+
+        <p style="font-size: 14px; font-weight: 600; margin: 20px 0 10px;">参考リンク（クリックで開く・URLを選択してコピー可）</p>
+        <div class="link-list">
+          <div class="link-item">
+            <a href="https://discord.com/channels/1147089423691939910/1147295649738534953/1334996846954680352" target="_blank" rel="noopener noreferrer" class="link-item-main">ぽんぬのつぶやき（Discord）</a>
+            <div class="link-item-url"><span>https://discord.com/channels/1147089423691939910/1147295649738534953/1334996846954680352</span></div>
+          </div>
+          <div class="link-item">
+            <a href="https://www.loom.com/share/b6e74b35b10f47fa9f489f9e2fa3cf23?sid=c14688fa-dfab-4a96-95b7-3bb1ce378d26" target="_blank" rel="noopener noreferrer" class="link-item-main">Loom動画</a>
+            <div class="link-item-url"><span>https://www.loom.com/share/b6e74b35b10f47fa9f489f9e2fa3cf23?sid=c14688fa-dfab-4a96-95b7-3bb1ce378d26</span></div>
+          </div>
+          <div class="link-item">
+            <a href="https://drive.google.com/file/d/1tHKQ3ckdMjdItW8kleRe8QZ4iWkIS0gV/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="link-item-main">参考資料（Google Drive）</a>
+            <div class="link-item-url"><span>https://drive.google.com/file/d/1tHKQ3ckdMjdItW8kleRe8QZ4iWkIS0gV/view?usp=sharing</span></div>
+          </div>
+        </div>
+
+        <p style="font-weight: 600; margin: 20px 0 16px;">今回のゴール：ぽんぬさんがこのスライドを見ながら話すと話しやすいスライドを作る</p>
+        <div class="practice-steps">
+          <div class="practice-step">
+            <div class="practice-step-content">
+              <h4>音声（Loom）を聞く</h4>
+              <p>文字起こし or 参考資料を確認</p>
+            </div>
+          </div>
+          <div class="practice-step">
+            <div class="practice-step-content">
+              <h4>トークスクリプト（話口調）を把握</h4>
+              <p>話の流れ・ポイントを整理</p>
+            </div>
+          </div>
+          <div class="practice-step">
+            <div class="practice-step-content">
+              <h4>話し手が見ながら話しやすいスライドに変換</h4>
+              <p>図解と文字を見分け、適切に構成</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-box">
+      <p>あらかじめ想像できていれば「こういう時はこうすればいい」とわかる。<br>自主制作のときに「こういう依頼の時に備えて練習しておこう」ができる。<br>今日学んだことを、ぜひ自主制作に活かしてみてください。</p>
+    </div>
+  </div>
+</body>
+</html>

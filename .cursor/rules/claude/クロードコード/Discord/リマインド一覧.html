@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>日報リマインド一覧</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Hiragino Sans", "Helvetica Neue", sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      padding: 32px;
+    }
+    h1 { font-size: 22px; font-weight: bold; margin-bottom: 4px; }
+    .meta { color: #888; font-size: 13px; margin-bottom: 28px; }
+    h2 { font-size: 16px; font-weight: bold; margin: 24px 0 10px; padding-left: 10px; }
+    h2.warn { border-left: 4px solid #e53935; color: #c62828; }
+    h2.ok   { border-left: 4px solid #43a047; color: #2e7d32; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    th {
+      background: #37474f;
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 13px;
+    }
+    td { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+    tr:last-child td { border-bottom: none; }
+    .remind-row { background: #fff8f8; }
+    .name { font-weight: bold; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .badge.red    { background: #ffebee; color: #c62828; }
+    .badge.orange { background: #fff3e0; color: #e65100; }
+    .badge.green  { background: #e8f5e9; color: #2e7d32; }
+    .msg-box {
+      background: #fff3e0;
+      border: 1px dashed #ffb74d;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      user-select: all;
+      transition: background 0.2s;
+    }
+    .msg-box:hover { background: #ffe0b2; }
+    .msg-box.copied { background: #c8e6c9; border-color: #66bb6a; }
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #323232;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 24px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <h1>日報リマインド一覧</h1>
+  <p class="meta">
+    今日: 2026-03-13 ／ データ期間: 2026年2月 ／ 基準: 7日以上未提出をリマインド対象<br>
+    解析メンバー数: 18名
+  </p>
+
+  <h2 class="warn">要リマインド (18名)</h2>
+  <table>
+    <thead>
+      <tr><th>名前</th><th>最終提出日</th><th>状態</th><th>メッセージ（クリックでコピー）</th></tr>
+    </thead>
+    <tbody>
+    <tr class="remind-row">
+      <td class="name">marie_2531p_q</td>
+      <td>2/12</td>
+      <td><span class="badge red">29日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@marie_2531p_q 最近どうした？2/12以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">koji_0395_47002</td>
+      <td>2/25</td>
+      <td><span class="badge red">16日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@koji_0395_47002 最近どうした？2/25以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">chiiha4961</td>
+      <td>2/25</td>
+      <td><span class="badge red">16日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@chiiha4961 最近どうした？2/25以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">saco_29506</td>
+      <td>2/25</td>
+      <td><span class="badge red">16日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@saco_29506 最近どうした？2/25以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">a_ya_63nomama36</td>
+      <td>2/25</td>
+      <td><span class="badge red">16日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@a_ya_63nomama36 最近どうした？2/25以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">masami_ma.sa</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@masami_ma.sa 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">mikinomama</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@mikinomama 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">maru.maru_4</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@maru.maru_4 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">oga07070409</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@oga07070409 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">mousugu_tanjobi</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@mousugu_tanjobi 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">mm101403</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@mm101403 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">hisa.0912</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@hisa.0912 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">araharakanami</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@araharakanami 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">tukachan_</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@tukachan_ 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">yokogrunberg</td>
+      <td>2/26</td>
+      <td><span class="badge red">15日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@yokogrunberg 最近どうした？2/26以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">humikiri.</td>
+      <td>2/27</td>
+      <td><span class="badge red">14日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@humikiri. 最近どうした？2/27以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">hasegawamana</td>
+      <td>2/27</td>
+      <td><span class="badge red">14日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@hasegawamana 最近どうした？2/27以来だよ！</div></td>
+    </tr>
+    <tr class="remind-row">
+      <td class="name">kobayashi_keiko</td>
+      <td>2/27</td>
+      <td><span class="badge red">14日未提出</span></td>
+      <td><div class="msg-box" onclick="copyText(this)" title="クリックでコピー">@kobayashi_keiko 最近どうした？2/27以来だよ！</div></td>
+    </tr></tbody>
+  </table>
+
+  <h2 class="ok">提出済み (0名)</h2>
+  <table>
+    <thead>
+      <tr><th>名前</th><th>最終提出日</th><th>状態</th><th></th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="toast" id="toast">コピーしました！</div>
+  <script>
+    function copyText(el) {
+      const text = el.innerText.trim();
+      navigator.clipboard.writeText(text).then(() => {
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 1500);
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+  </script>
+</body>
+</html>
