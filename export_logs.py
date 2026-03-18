@@ -111,22 +111,30 @@ def get_list_key(entry: str) -> str:
     return s
 
 
-def load_graduate_list() -> set[str]:
-    """卒業生リストを読み、照合用のキー集合を返す。# 始まりはコメント。
+def load_graduate_list() -> tuple[set[str], set[str]]:
+    """卒業生リストを読み、(表示名キー集合, ユーザー名集合) を返す。# 始まりはコメント。
 
     - 「完全一致」… 卒業生リストに Discord 表示名そのものを書いた場合（例: やすこ_B）
     - 「キー一致」… _ や （ より前だけを書いた場合（例: やすこ）
+    - 「ユーザー名指定」… 「表示名 @username」の形式（例: ゆか @yuka4059）→ 同名別人でも確実に区別
 
     ただし曖昧マッチが原因で「やすこ_B / やすこ_R」のような重複が起きないよう、
     _ や （ を含む行についてはキー一致用の短縮版は追加しない。
     """
     if not os.path.exists(GRADUATE_LIST_FILE):
-        return set()
+        return set(), set()
     out: set[str] = set()
+    usernames: set[str] = set()
     with open(GRADUATE_LIST_FILE, "r", encoding="utf-8") as f:
         for ln in f:
             ln = ln.strip()
             if not ln or ln.startswith("#"):
+                continue
+            # 「表示名 @username」形式の処理
+            if " @" in ln:
+                username = ln.split(" @", 1)[1].strip().lower()
+                if username:
+                    usernames.add(username)
                 continue
             out.add(ln)
             # _ や （ を含まない素の名前だけ、キー一致用にも追加する
@@ -134,7 +142,7 @@ def load_graduate_list() -> set[str]:
                 key = get_list_key(ln)
                 if key and key != ln:
                     out.add(key)
-    return out
+    return out, usernames
 
 
 def load_kyukai_list() -> set[str]:
@@ -178,22 +186,36 @@ def get_base_name(display_name: str) -> str:
 
 
 def resolve_graduates(
-    members: list[discord.Member], graduate_set: set[str]
+    members: list[discord.Member],
+    graduate_set: set[str],
+    graduate_usernames: set[str] | None = None,
 ) -> tuple[list[discord.Member], list[tuple[str, list[str]]]]:
     """
     在籍メンバーの中で卒業生を判定する。
-    完全一致なら卒業生。_より前で一致する場合、同じ「_より前」の人が複数いれば重複扱いにして除外せず、報告用に返す。
+    ユーザー名指定（@username）があれば最優先で確定。次に表示名の完全一致、キー一致の順。
+    同じキーの人が複数いれば重複扱いにして除外せず、報告用に返す。
     返値: (卒業生と確定したメンバーリスト, [(名前, [重複している表示名のリスト]), ...])
     """
     graduates: list[discord.Member] = []
     ambiguous: list[tuple[str, list[str]]] = []
+    already = set()
+
+    # ユーザー名指定（最優先・曖昧なし）
+    if graduate_usernames:
+        lower_usernames = {u.lower() for u in graduate_usernames}
+        for m in members:
+            if m.name.lower() in lower_usernames:
+                graduates.append(m)
+                already.add(m.id)
+
+    remaining = [m for m in members if m.id not in already]
 
     base_to_members: dict[str, list[discord.Member]] = {}
-    for m in members:
+    for m in remaining:
         base = get_base_name(m.display_name)
         base_to_members.setdefault(base, []).append(m)
 
-    for m in members:
+    for m in remaining:
         if m.display_name in graduate_set:
             graduates.append(m)
             continue
@@ -245,9 +267,9 @@ class MyClient(discord.Client):
             channel_ids = CHANNEL_IDS[:1] if TEST_MODE else CHANNEL_IDS
         if TEST_MODE:
             print("[テストモード] 1チャンネルのみ取得します")
-        graduate_set = load_graduate_list()
+        graduate_set, graduate_usernames = load_graduate_list()
         kyukai_set = load_kyukai_list()
-        if graduate_set:
+        if graduate_set or graduate_usernames:
             print(f"卒業生リスト: {len(graduate_set)} 名（メンバー数・未提出者・提出率から除外）")
         if kyukai_set:
             print(f"休会中リスト: {len(kyukai_set)} 名（未提出者の中にいれば「休会中」として表示）")
@@ -314,7 +336,7 @@ class MyClient(discord.Client):
             members = get_role_members(guild, role_name)
             # 卒業生はメンバー数・未提出者・提出率から除外（交流会等のためロールは付けたまま）
             # 同じ「_より前」の名前が複数人いるときは重複扱いで除外せず、確認を促す
-            graduates_in_room, ambiguous_list = resolve_graduates(members, graduate_set)
+            graduates_in_room, ambiguous_list = resolve_graduates(members, graduate_set, graduate_usernames)
             enrolled = [m for m in members if m not in graduates_in_room]
 
             # 複数該当時：手動実行なら「この人たちのうち誰を卒業生として除外するか」を確認
