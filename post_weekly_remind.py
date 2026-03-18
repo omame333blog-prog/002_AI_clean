@@ -184,7 +184,19 @@ def run_remind_for_channel(
     summary_dates, never_submitted, summary_graduates, kyukai_names = parse_summary(
         summary_path
     )
-    last_dates = {**last_from_log, **summary_dates}
+    # サマリーに載っている現在のメンバーのみ対象（ロールが外れた人をログ履歴から除外するため）
+    current_member_keys = (
+        {get_list_key(n) for n in summary_dates}
+        | {get_list_key(n) for n in never_submitted}
+        | {get_list_key(n) for n in kyukai_names}
+        | {get_list_key(n) for n in summary_graduates}
+    )
+    # ログの最終日付はサマリーの現在メンバーのみに絞る
+    last_from_log_filtered = {
+        n: d for n, d in last_from_log.items()
+        if get_list_key(n) in current_member_keys
+    }
+    last_dates = {**last_from_log_filtered, **summary_dates}
     exclude = set(graduate_set) | {get_list_key(n) for n in summary_graduates}
     exclude |= {get_list_key(n) for n in kyukai_names}  # 休会中は対象外
 
