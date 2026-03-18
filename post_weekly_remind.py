@@ -118,11 +118,11 @@ def parse_summary(
         if line.startswith("## 提出者"):
             section = "submitter"
             continue
-        if line.startswith("## 未提出者") and "休会中" not in line:
-            section = "never"
-            continue
         if line.startswith("## 未提出者のうち休会中"):
             section = "kyukai"
+            continue
+        if line.startswith("## 未提出者"):
+            section = "never"
             continue
         if line.startswith("※"):
             if section == "never":
@@ -203,12 +203,22 @@ def run_remind_for_channel(
     to_remind: list[tuple[str, str, int]] = []
     today_dt = datetime.strptime(today, "%Y-%m-%d").date()
 
-    # 一度も提出していない人（卒業生・休会中除く）
+    # 今月未提出の人（卒業生・休会中除く）：ログに過去の投稿があれば日付を使う
     for name in never_submitted:
         key = get_list_key(name)
         if key in exclude or is_graduate(name, graduate_set):
             continue
-        to_remind.append((name, "未提出", 0))
+        last = last_from_log_filtered.get(name)
+        if last:
+            try:
+                last_dt = datetime.strptime(last, "%Y-%m-%d").date()
+                days_ago = (today_dt - last_dt).days
+                if days_ago >= REMIND_DAYS:
+                    to_remind.append((name, last, days_ago))
+            except ValueError:
+                to_remind.append((name, "未提出", 0))
+        else:
+            to_remind.append((name, "未提出", 0))
 
     # 2週間以上前が最終提出の人
     for name, last in last_dates.items():
