@@ -247,7 +247,7 @@ def build_remind_message(
         lines.append("")
     lines.extend([
         "※ 卒業生・休会中は対象外です。",
-        "※ DMでお声がけいただき、返信がない場合はLINEから連絡いたします。",
+        "※ DMでお声がけいただき、返信がない場合はLINEから連絡するので教えてください。",
     ])
     return "\n".join(lines)
 

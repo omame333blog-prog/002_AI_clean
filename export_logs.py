@@ -39,16 +39,16 @@ CHANNEL_TO_ROLE = {
     1366955220420006070: "ホワイトのお部屋🤍",
     1366955268855955569: "パープルのお部屋💜",
     1385984348309688441: "グリーンのお部屋💚",
-    1385984417100726425: "ピンクのお部屋💗",
+    1385984417100726425: "ピンクのお部屋🩷",
     1420627078834946059: "ブラックのお部屋🖤",
     1420626668749324308: "オレンジのお部屋🧡",
     1420627377754603601: "ブラウンのお部屋🤎",
     1432259083683102720: "ブルーのお部屋💙",
     1442705451039850548: "みずいろのお部屋🩵",
     1456297262308266015: "イエローのお部屋💛",
-    1464304043538251906: "グレーのお部屋🤍",
-    1476381913731174615: "いぬ-戌-のお部屋🐶",
-    1476382049928609938: "ひつじ-未-のお部屋🐑",
+    1464304043538251906: "グレーのお部屋🩶",
+    1476381913731174615: "いぬ−戌–のお部屋🐶",
+    1476382049928609938: "ひつじ−未−のお部屋🐑",
 }
 
 # 保存先：このスクリプトと同じ 002_AI_ 直下の nippou_logs
@@ -306,7 +306,9 @@ class MyClient(discord.Client):
             if latest_msg_id:
                 state[sid] = str(latest_msg_id)
 
-            submitters_map = parse_submitters_from_lines(all_lines)
+            current_month = datetime.now(timezone.utc).astimezone().strftime("%Y-%m")
+            monthly_lines = [ln for ln in all_lines if ln.startswith(f"[{current_month}")]
+            submitters_map = parse_submitters_from_lines(monthly_lines)
             guild = channel.guild
             role_name = CHANNEL_TO_ROLE.get(channel_id, channel.name)
             members = get_role_members(guild, role_name)

@@ -1,0 +1,26 @@
+name: 担当者活動チェック（金曜）
+
+on:
+  schedule:
+    - cron: '0 0 * * 5'  # 毎週金曜 9:00 JST
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: 担当者チェック投稿
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python check_tantosha_activity.py --post

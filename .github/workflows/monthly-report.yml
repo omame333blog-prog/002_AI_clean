@@ -1,0 +1,26 @@
+name: 月次レポート（毎月1日）
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # 毎月1日 9:00 JST
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: 月次レポート投稿
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python post_monthly_report.py

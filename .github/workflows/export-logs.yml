@@ -1,0 +1,34 @@
+name: 毎日ログ取得
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日 9:00 JST (UTC+9)
+  workflow_dispatch:       # 手動実行ボタン
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: ログ取得実行
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python export_logs.py
+
+      - name: 更新されたログをコミット＆プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nippou_logs/
+          git diff --cached --quiet || git commit -m "ログ自動更新 $(date '+%Y-%m-%d')"
+          git push

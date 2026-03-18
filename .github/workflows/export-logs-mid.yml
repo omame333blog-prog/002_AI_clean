@@ -1,0 +1,34 @@
+name: 月中ログ取得（毎月15日）
+
+on:
+  schedule:
+    - cron: '0 0 15 * *'  # 毎月15日 9:00 JST
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 依存パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: ログ取得実行
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        run: python export_logs.py
+
+      - name: 更新されたログをコミット＆プッシュ
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add nippou_logs/
+          git diff --cached --quiet || git commit -m "月中ログ自動更新 $(date '+%Y-%m-%d')"
+          git push
