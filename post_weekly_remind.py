@@ -25,7 +25,7 @@ sys.path.insert(0, _BASE)
 import discord
 
 # ★週1リマインドを送るDiscordチャンネルID。None なら送信しない（運営用チャンネルを指定）
-REMIND_CHANNEL_ID = 1482931158714155008  # 週次提出率アナウンスと同じチャンネルで可
+REMIND_CHANNEL_ID = 1411941645896777819
 
 def _get_discord_token() -> str:
     t = os.environ.get("DISCORD_TOKEN", "").strip()
@@ -58,7 +58,7 @@ def get_list_key(entry: str) -> str:
 
 
 def load_graduate_list() -> set[str]:
-    """卒業生リストのキー集合。# はコメント。"""
+    """卒業生リストのキー集合。# はコメント。`表示名 @username` 形式は表示名部分のみ抽出。"""
     if not os.path.exists(GRADUATE_LIST_FILE):
         return set()
     out: set[str] = set()
@@ -67,10 +67,19 @@ def load_graduate_list() -> set[str]:
             ln = ln.strip()
             if not ln or ln.startswith("#"):
                 continue
-            out.add(ln)
-            key = get_list_key(ln)
-            if key:
-                out.add(key)
+            # 半角・全角どちらの @ にも対応
+            for at in (" @", " ＠"):
+                if at in ln:
+                    display = ln.split(at, 1)[0].strip()
+                    if display:
+                        out.add(display)
+                        out.add(get_list_key(display))
+                    break
+            else:
+                out.add(ln)
+                key = get_list_key(ln)
+                if key:
+                    out.add(key)
     return out
 
 
@@ -149,15 +158,36 @@ def parse_summary(
     return last_dates, never_submitted, graduates, kyukai
 
 
+# export_logs.py の CHANNEL_IDS と同じ順序
+CHANNEL_ORDER = [
+    "❤️日報：レッド",
+    "🤍日報：ホワイト",
+    "💜日報：パープル",
+    "💚日報：グリーン",
+    "🩷日報：ピンク",
+    "🖤日報：ブラック",
+    "🧡日報：オレンジ",
+    "🤎日報：ブラウン",
+    "💙日報：ブルー",
+    "🩵日報：みずいろ",
+    "💛日報：イエロー",
+    "🩶日報：グレー",
+    "🐶日報：-いぬ-戌",
+    "🐑日報：-ひつじ-未",
+]
+
+
 def discover_channel_pairs() -> list[tuple[str, str, str]]:
-    """(ログパス, サマリーパス, チャンネル表示名) のリスト。チャンネル名はサマリーのベース名から _サマリー を除いたもの。"""
-    pairs: list[tuple[str, str, str]] = []
+    """(ログパス, サマリーパス, チャンネル表示名) のリスト。CHANNEL_ORDER の順で返す。"""
     nippou_dir = NIPPOU_DIR
     if not os.path.isdir(nippou_dir):
         nippou_dir = os.path.join(os.getcwd(), "nippou_logs")
     if not os.path.isdir(nippou_dir):
-        return pairs
-    for name in sorted(os.listdir(nippou_dir)):
+        return []
+
+    # ファイル名から全ペアを収集
+    all_pairs: dict[str, tuple[str, str, str]] = {}
+    for name in os.listdir(nippou_dir):
         if not name.endswith("_サマリー.txt"):
             continue
         log_name = name.replace("_サマリー.txt", ".txt")
@@ -165,8 +195,14 @@ def discover_channel_pairs() -> list[tuple[str, str, str]]:
         log_path = os.path.join(nippou_dir, log_name)
         channel_name = name.replace("_サマリー.txt", "")
         if os.path.isfile(log_path):
-            pairs.append((log_path, summary_path, channel_name))
-    return pairs
+            all_pairs[channel_name] = (log_path, summary_path, channel_name)
+
+    # 定義順に並べ、未定義のものは末尾にアルファベット順で追加
+    ordered = [all_pairs[ch] for ch in CHANNEL_ORDER if ch in all_pairs]
+    defined = set(CHANNEL_ORDER)
+    extras = sorted(ch for ch in all_pairs if ch not in defined)
+    ordered += [all_pairs[ch] for ch in extras]
+    return ordered
 
 
 def run_remind_for_channel(
@@ -196,6 +232,13 @@ def run_remind_for_channel(
         n: d for n, d in last_from_log.items()
         if get_list_key(n) in current_member_keys
     }
+    # ランク変動（_R→_P等）対応: ベース名→最新日付のインデックスを作成
+    key_to_last: dict[str, str] = {}
+    for n, d in last_from_log_filtered.items():
+        key = get_list_key(n)
+        if key not in key_to_last or d > key_to_last[key]:
+            key_to_last[key] = d
+
     last_dates = {**last_from_log_filtered, **summary_dates}
     exclude = set(graduate_set) | {get_list_key(n) for n in summary_graduates}
     exclude |= {get_list_key(n) for n in kyukai_names}  # 休会中は対象外
@@ -208,7 +251,8 @@ def run_remind_for_channel(
         key = get_list_key(name)
         if key in exclude or is_graduate(name, graduate_set):
             continue
-        last = last_from_log_filtered.get(name)
+        # 完全一致 → ベース名で再試行（ランク変動対応）
+        last = last_from_log_filtered.get(name) or key_to_last.get(key)
         if last:
             try:
                 last_dt = datetime.strptime(last, "%Y-%m-%d").date()
@@ -250,22 +294,21 @@ def build_remind_message(
     ]
     for channel_name, remind_list in results:
         if not remind_list:
-            lines.append(f"・**{channel_name}**: 対象者なし ✅")
+            lines.append(f"## {channel_name}（対象者なし ✅）")
+            lines.append("")
             continue
-        lines.append(f"・**{channel_name}**（要リマインド {len(remind_list)}名）")
+        lines.append(f"## {channel_name}（要リマインド {len(remind_list)}名）")
         for name, last_str, days_ago in sorted(
             remind_list,
             key=lambda x: (x[1] != "未提出", -(x[2] if isinstance(x[2], int) and x[2] < 10000 else 0)),
         ):
             if last_str == "未提出":
-                # 一度も提出なし＝1ヶ月以上リスクとして🚨＋太字
-                lines.append(f"  - 🚨 {name}: **未提出**")
+                lines.append(f"🚨 {name}: 未提出")
             else:
                 if days_ago >= 30:
-                    # 1ヶ月以上未提出＝サポート対象外アナウンス対象
-                    lines.append(f"  - 🚨 {name}: 最終 {last_str}（**{days_ago}日経過**）")
+                    lines.append(f"🚨 {name}: 最終 {last_str}（{days_ago}日経過）")
                 else:
-                    lines.append(f"  - {name}: 最終 {last_str}（{days_ago}日経過）")
+                    lines.append(f"{name}: 最終 {last_str}（{days_ago}日経過）")
         lines.append("")
     lines.extend([
         "※ 卒業生・休会中は対象外です。",

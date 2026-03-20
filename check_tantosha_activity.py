@@ -293,8 +293,7 @@ def main():
             r = analyze_channel_post(ch, tantosha, reply_start, reply_end, mvp_start, mvp_end)
             replied_mark = "✅" if r["replied"] else "❌"
             mvp_mark = "✅" if r["mvp_announced"] else "❌"
-            count_str = f"（{r['reply_count']}件）" if r["reply_count"] > 0 else ""
-            summary_lines.append(f"  返信 {replied_mark}{count_str}  MVP発表 {mvp_mark}")
+            summary_lines.append(f"  返信 {replied_mark}  MVP発表 {mvp_mark}")
             total_checked += 1
             if r["replied"]: replied_ok += 1
             if r["mvp_announced"]: mvp_ok += 1
@@ -304,9 +303,8 @@ def main():
                 week_label = format_week(r["week_start"], r["week_end"])
                 replied_mark = "✅" if r["replied"] else "❌"
                 mvp_mark = "✅" if r["mvp_announced"] else "❌"
-                count_str = f"（{r['reply_count']}件）" if r["reply_count"] > 0 else ""
                 summary_lines.append(
-                    f"  {week_label}  返信 {replied_mark}{count_str}  MVP発表 {mvp_mark}"
+                    f"  {week_label}  返信 {replied_mark}  MVP発表 {mvp_mark}"
                 )
                 total_checked += 1
                 if r["replied"]: replied_ok += 1

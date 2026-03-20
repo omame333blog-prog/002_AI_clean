@@ -115,6 +115,47 @@ set -a && source .discord_token && set +a && python export_logs.py
 - `export_logs.py` は実行時の年月（`YYYY-MM`）に一致するログ行のみを集計対象にする
 - 月が変わると自動的に翌月分で再集計される
 
+## ログ欠落・重複の対処法
+
+### ログ欠落（特定メッセージが取得されていない）
+
+`export_logs.py` はstateベースの差分取得のため、API瞬断などでメッセージが1件飛ばされると永久に取得されない。
+欠落を発見したらstateをリセットしてフル再取得する。
+
+```bash
+# 1. stateから該当チャンネルを削除（例：ブラウン = 1420627377754603601）
+python3 -c "
+import json
+with open('nippou_logs/export_state.json') as f: state = json.load(f)
+del state['1420627377754603601']
+with open('nippou_logs/export_state.json', 'w') as f: json.dump(state, f, ensure_ascii=False, indent=2)
+"
+# 2. ログファイルをクリア
+> "nippou_logs/🤎日報：ブラウン.txt"
+# 3. フル再取得
+set -a && source .discord_token && set +a
+TARGET_CHANNEL_ID=1420627377754603601 venv/bin/python export_logs.py
+```
+
+全14部屋のチャンネルIDは `export_logs.py` の `CHANNEL_IDS` を参照。
+
+### ログ重複除去
+
+`export_logs.py` は差分を既存ファイルに追記するため、state管理の乱れで重複が発生することがある。
+除去は **`dict.fromkeys()`** を使う。`set()` + `splitlines()` は改行を含む古い形式のメッセージを壊すため使用禁止。
+
+```python
+import re, os
+LOG_LINE_RE = re.compile(r'^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\]')
+path = "nippou_logs/🤎日報：ブラウン.txt"
+with open(path) as f:
+    lines = [ln for ln in f.read().splitlines() if ln.strip()]
+unique = list(dict.fromkeys(lines))
+unique.sort(key=lambda ln: (m := LOG_LINE_RE.match(ln)) and m.group(1) or ln)
+with open(path, "w") as f:
+    f.write("\n".join(unique))
+```
+
 ## CHANNEL_TO_ROLEの注意点
 
 Discordのロール名と完全一致が必要。過去に以下がずれていた（修正済み）:

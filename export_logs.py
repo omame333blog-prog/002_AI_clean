@@ -181,8 +181,11 @@ def is_in_list(display_name: str, key_set: set[str]) -> bool:
 
 
 def get_base_name(display_name: str) -> str:
-    """Discord表示名の _ より前の部分を返す。_ が無ければそのまま。"""
-    return display_name.split("_", 1)[0].strip() if "_" in display_name else display_name
+    """Discord表示名の _ または ＿（全角）より前の部分を返す。なければそのまま。"""
+    for sep in ("_", "＿"):
+        if sep in display_name:
+            return display_name.split(sep, 1)[0].strip()
+    return display_name
 
 
 def resolve_graduates(
