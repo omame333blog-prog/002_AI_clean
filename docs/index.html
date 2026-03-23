@@ -294,6 +294,61 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
 .reveal-delay-2{transition-delay:0.2s;}
 .reveal-delay-3{transition-delay:0.3s;}
 
+/* ── INTRO HERO ── */
+#intro .hero{min-height:100vh;background:var(--bg);}
+#intro .hero::before{content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 55% 50% at 85% 15%,rgba(200,134,10,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 45% 45% at 5% 85%,rgba(192,64,64,0.05) 0%,transparent 60%),
+    radial-gradient(ellipse 35% 35% at 50% 50%,rgba(42,109,181,0.03) 0%,transparent 70%);
+  pointer-events:none;}
+.intro-eyebrow{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.25em;color:var(--text-dim);text-transform:uppercase;margin-bottom:1.25rem;opacity:0;animation:fadeUp 0.8s 0.1s ease forwards;}
+.intro-title{font-family:var(--serif);font-weight:900;line-height:1.25;color:var(--cream);margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.3s ease forwards;}
+.intro-title .num{font-size:clamp(2.2rem,7vw,4.2rem);color:var(--amber);display:block;letter-spacing:-0.02em;}
+.intro-title .sub{font-size:clamp(1rem,2.5vw,1.35rem);display:block;color:var(--text-dim);font-weight:400;margin-top:0.5rem;line-height:1.6;}
+.intro-title .main{font-size:clamp(1.6rem,4.5vw,2.8rem);display:block;margin-top:0.75rem;letter-spacing:-0.01em;}
+.intro-title .main em{font-style:normal;color:var(--amber);}
+.intro-date{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;color:var(--text-dim);text-transform:uppercase;opacity:0;animation:fadeUp 0.8s 0.5s ease forwards;margin-bottom:3rem;}
+
+/* ── INTRO: 壁セクション ── */
+.wall-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.wall-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:1.5rem;box-shadow:0 2px 10px rgba(0,0,0,0.06);position:relative;overflow:hidden;}
+.wall-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.wall-card:nth-child(1)::before{background:var(--red);}
+.wall-card:nth-child(2)::before{background:var(--amber);}
+.wall-card:nth-child(3)::before{background:var(--blue);}
+.wall-num{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.75rem;}
+.wall-card:nth-child(1) .wall-num{color:var(--red);}
+.wall-card:nth-child(2) .wall-num{color:var(--amber);}
+.wall-card:nth-child(3) .wall-num{color:var(--blue);}
+.wall-quote{font-family:var(--serif);font-size:0.9rem;font-weight:700;color:var(--cream);line-height:1.55;margin-bottom:0.6rem;}
+.wall-quote em{font-style:normal;}
+.wall-card:nth-child(1) .wall-quote em{color:var(--red);}
+.wall-card:nth-child(2) .wall-quote em{color:var(--amber);}
+.wall-card:nth-child(3) .wall-quote em{color:var(--blue);}
+.wall-note{font-size:0.78rem;color:var(--text-dim);line-height:1.65;}
+
+/* ── INTRO: ゴールセクション ── */
+.goal-box{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.goal-top{background:linear-gradient(135deg,rgba(200,134,10,0.07),rgba(46,148,105,0.05));padding:1.5rem 2rem;border-bottom:1px solid var(--border);}
+.goal-lead{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:0.5rem;}
+.goal-text{font-family:var(--serif);font-size:clamp(0.95rem,2vw,1.1rem);font-weight:700;color:var(--cream);line-height:1.6;}
+.goal-text em{font-style:normal;color:var(--amber);}
+.goal-items{padding:1.5rem 2rem;display:flex;flex-direction:column;gap:0.75rem;}
+.goal-item{display:flex;align-items:flex-start;gap:0.75rem;font-size:0.88rem;color:var(--text);line-height:1.6;}
+.goal-check{color:var(--green);flex-shrink:0;font-size:0.95rem;margin-top:2px;}
+
+/* ── INTRO: 構成プレビュー ── */
+.parts-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:0.5rem;}
+.part-preview-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.05);text-decoration:none;color:inherit;transition:transform 0.15s,box-shadow 0.15s;display:block;}
+.part-preview-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.1);}
+.part-preview-num{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem;}
+.part-preview-card:nth-child(1) .part-preview-num{color:var(--amber);}
+.part-preview-card:nth-child(2) .part-preview-num{color:var(--green);}
+.part-preview-card:nth-child(3) .part-preview-num{color:var(--blue);}
+.part-preview-title{font-family:var(--serif);font-weight:700;font-size:0.88rem;color:var(--cream);line-height:1.5;margin-bottom:0.35rem;}
+.part-preview-desc{font-size:0.75rem;color:var(--text-dim);line-height:1.6;}
+
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
   nav .label{display:none;}
@@ -308,6 +363,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   section{padding:3.5rem 1.25rem;}
   #part1 .hero-title{font-size:1.8rem;}
   #part2 .hero-title,#part3 .hero-title{font-size:1.6rem;}
+  .wall-grid,.parts-preview{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -319,11 +375,112 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;
   <div class="dot"></div>
   <span class="label">図解デザイナー講座 / 勉強会資料</span>
   <div class="nav-parts">
+    <a href="#intro" class="nav-part">TOP</a>
     <a href="#part1" class="nav-part">Part 01</a>
     <a href="#part2" class="nav-part">Part 02</a>
     <a href="#part3" class="nav-part">おまけ</a>
   </div>
 </nav>
+
+<!-- ══════════════════════════════════════════
+     INTRO — タイトル & 前提
+═══════════════════════════════════════════ -->
+<div id="intro">
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="intro-eyebrow">図解デザイナー講座 — 勉強会資料</div>
+    <h1 class="intro-title">
+      <span class="num">25件応募しても採用ゼロ？！</span>
+      <span class="sub">その原因がわかれば、今日から動ける</span>
+      <span class="main">「0→1の壁を突破する」<br><em>案件獲得ワーク</em></span>
+    </h1>
+    <div class="intro-date">勉強会資料 — 全3パート</div>
+    <div class="scroll-hint"><span>↓</span><span>scroll to start</span></div>
+  </div>
+</div>
+
+<!-- 壁 -->
+<section>
+  <div class="section-num reveal">はじめに</div>
+  <h2 class="section-title reveal">なぜ動けなくなるのか</h2>
+  <p class="section-desc reveal">「やる気はある。でも前に進めない」。その正体は3つの壁です。</p>
+  <hr class="divider reveal">
+
+  <div class="wall-grid reveal">
+    <div class="wall-card">
+      <div class="wall-num">Wall 01 — 詐欺・怪しい案件</div>
+      <div class="wall-quote">「全部詐欺に<em>見えてきた</em>」</div>
+      <div class="wall-note">知識なしで動くと怖い。でも知識を持てば、まともな案件はちゃんとある。怖くて応募できなくなるのが、一番もったいない。</div>
+    </div>
+    <div class="wall-card">
+      <div class="wall-num">Wall 02 — 応募文</div>
+      <div class="wall-quote">「25件送っても<em>返事がゼロ</em>」</div>
+      <div class="wall-note">努力が足りないのではなく、書き方に問題がある。クライアントが「採用したい」と思える文章になっていないだけ。</div>
+    </div>
+    <div class="wall-card">
+      <div class="wall-num">Wall 03 — 料金設定</div>
+      <div class="wall-quote">「いくらにすれば<em>いいの？</em>」</div>
+      <div class="wall-note">正解を探してもずっと見つからない。「最初の動き方」さえわかれば、あとは試しながら調整できる。</div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal">
+    この3つがわかれば、今日から動ける。<br>
+    <strong>正解を渡すんじゃなくて、動き出せる状態を渡したい。</strong>
+  </div>
+</section>
+
+<!-- ゴール -->
+<section>
+  <div class="section-num reveal">このワークのゴール</div>
+  <h2 class="section-title reveal">今日、持って帰ってほしいもの</h2>
+  <hr class="divider reveal">
+
+  <div class="goal-box reveal">
+    <div class="goal-top">
+      <div class="goal-lead">Today's Goal</div>
+      <div class="goal-text">
+        知識を詰め込むのではなく、<em>「あ、これか」と腑に落ちる瞬間</em>をつくる。<br>
+        そこから自分で動き出せれば、このワークは成功です。
+      </div>
+    </div>
+    <div class="goal-items">
+      <div class="goal-item"><span class="goal-check">✓</span><span>怪しい案件のサインを知って、<strong>安心して応募できる</strong>ようになる</span></div>
+      <div class="goal-item"><span class="goal-check">✓</span><span>応募文の「型」を知って、<strong>今日から書き直せる</strong></span></div>
+      <div class="goal-item"><span class="goal-check">✓</span><span>料金設定で迷わない<strong>最初の一手がわかる</strong></span></div>
+      <div class="goal-item"><span class="goal-check">✓</span><span>「正解を知っている人」ではなく、<strong>動き続けられる人</strong>になる</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 構成 -->
+<section>
+  <div class="section-num reveal">今日の構成</div>
+  <h2 class="section-title reveal">3つのパートで進めます</h2>
+  <hr class="divider reveal">
+
+  <div class="parts-preview reveal">
+    <a href="#part1" class="part-preview-card">
+      <div class="part-preview-num">Part 01 — 詐欺案件の地図</div>
+      <div class="part-preview-title">「全部詐欺に見えてきた」<br>そのまま動けなくなるのが一番もったいない</div>
+      <div class="part-preview-desc">怪しい案件の5つのサイン・受講生の体験談・応募前チェックリスト</div>
+    </a>
+    <a href="#part2" class="part-preview-card">
+      <div class="part-preview-num">Part 02 — 応募文ワーク</div>
+      <div class="part-preview-title">応募文は、丁寧さをアピール<br>する場所じゃない</div>
+      <div class="part-preview-desc">NG例3パターン・選ばれる応募文の型・状況別Q&A</div>
+    </a>
+    <a href="#part3" class="part-preview-card">
+      <div class="part-preview-num">おまけ — 料金設計</div>
+      <div class="part-preview-title">料金設定に、正解はありません。<br>だから、こう考える</div>
+      <div class="part-preview-desc">スタート1枚500円の意味・価格が上がる3ステップ・見積もりQ&A</div>
+    </a>
+  </div>
+</section>
+
+</div><!-- /#intro -->
 
 <!-- ══════════════════════════════════════════
      PART 01 — 詐欺案件の地図
