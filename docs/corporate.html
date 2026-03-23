@@ -6,14 +6,14 @@
 <title>DataForge株式会社 — データが、意思決定を変える</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ── RESET & BASE ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
-  background:#070c18;
-  color:#e8e3dc;
+  background:#f0edea;
+  color:#1c1814;
   font-family:'Noto Sans JP',sans-serif;
   font-size:16px;
   line-height:1.7;
@@ -22,29 +22,29 @@ body{
 
 /* ── TOKENS ── */
 :root{
-  --navy:#070c18;
-  --navy2:#0d1425;
-  --navy3:#141e35;
-  --gold:#c9922a;
-  --gold-dim:rgba(201,146,42,0.12);
-  --gold-glow:rgba(201,146,42,0.25);
-  --blue:#3b6cc9;
-  --blue-dim:rgba(59,108,201,0.1);
-  --white:#f0ede8;
-  --white-dim:rgba(240,237,232,0.45);
-  --white-faint:rgba(240,237,232,0.08);
-  --border:rgba(240,237,232,0.08);
-  --border-gold:rgba(201,146,42,0.25);
-  --serif:'Shippori Mincho',serif;
+  --navy:#f0edea;
+  --navy2:#e8e4e0;
+  --navy3:#dedad5;
+  --gold:#c8860a;
+  --gold-dim:rgba(200,134,10,0.1);
+  --gold-glow:rgba(200,134,10,0.2);
+  --blue:#2a6db5;
+  --blue-dim:rgba(42,109,181,0.08);
+  --white:#1c1814;
+  --white-dim:rgba(58,53,48,0.5);
+  --white-faint:rgba(58,53,48,0.06);
+  --border:rgba(0,0,0,0.08);
+  --border-gold:rgba(200,134,10,0.25);
+  --serif:'Noto Serif JP',serif;
   --sans:'Noto Sans JP',sans-serif;
   --mono:'DM Mono',monospace;
 
   /* Light section */
-  --lt-bg:#faf8f5;
-  --lt-bg2:#f3f0eb;
-  --lt-text:#1a1510;
-  --lt-text-dim:rgba(26,21,16,0.5);
-  --lt-border:rgba(26,21,16,0.07);
+  --lt-bg:#f0edea;
+  --lt-bg2:#e8e4e0;
+  --lt-text:#1c1814;
+  --lt-text-dim:rgba(28,21,16,0.5);
+  --lt-border:rgba(0,0,0,0.08);
 }
 
 /* ── SELECTION ── */
@@ -62,9 +62,9 @@ header{
   transition:background 0.3s,border-color 0.3s;
 }
 header.scrolled{
-  background:rgba(7,12,24,0.92);
+  background:rgba(240,237,234,0.97);
   border-color:var(--border);
-  backdrop-filter:blur(12px);
+  backdrop-filter:blur(8px);
 }
 nav{
   width:100%;max-width:1200px;margin:0 auto;
@@ -124,7 +124,7 @@ nav{
 }
 .mobile-menu{
   display:none;position:fixed;inset:0;z-index:200;
-  background:rgba(7,12,24,0.97);backdrop-filter:blur(12px);
+  background:rgba(240,237,234,0.97);backdrop-filter:blur(8px);
   flex-direction:column;padding:2rem;
 }
 .mobile-menu.open{display:flex;}
@@ -165,19 +165,19 @@ nav{
 .blob-gold{
   width:600px;height:500px;
   top:-100px;right:-100px;
-  background:radial-gradient(ellipse,rgba(201,146,42,0.18) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(200,134,10,0.09) 0%,transparent 70%);
   animation-duration:14s;
 }
 .blob-blue{
   width:500px;height:400px;
   bottom:-50px;left:-80px;
-  background:radial-gradient(ellipse,rgba(59,108,201,0.15) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(42,109,181,0.07) 0%,transparent 70%);
   animation-duration:18s;animation-delay:-6s;
 }
 .blob-mid{
   width:300px;height:300px;
   top:40%;left:40%;
-  background:radial-gradient(ellipse,rgba(201,146,42,0.06) 0%,transparent 70%);
+  background:radial-gradient(ellipse,rgba(200,134,10,0.04) 0%,transparent 70%);
   animation-duration:10s;animation-delay:-3s;
 }
 @keyframes drift{
@@ -189,8 +189,8 @@ nav{
 .hero-grid{
   position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(240,237,232,0.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(240,237,232,0.025) 1px,transparent 1px);
+    linear-gradient(rgba(0,0,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,0,0,0.025) 1px,transparent 1px);
   background-size:60px 60px;
   mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%);
 }
@@ -198,9 +198,9 @@ nav{
 /* Horizontal scan line */
 .scan-line{
   position:absolute;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,146,42,0.4),transparent);
+  background:linear-gradient(90deg,transparent,rgba(200,134,10,0.25),transparent);
   animation:scan 6s linear infinite;
-  opacity:0.6;
+  opacity:0.5;
 }
 @keyframes scan{
   0%{top:-5%;opacity:0;}
