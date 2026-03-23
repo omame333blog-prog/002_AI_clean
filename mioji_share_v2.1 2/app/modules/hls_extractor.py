@@ -5,6 +5,7 @@ import shutil
 import re
 import requests
 import tempfile
+from urllib.parse import urlparse
 
 # Windows環境での絵文字出力対応（cp932エラー回避）
 if sys.platform == "win32":
@@ -25,6 +26,25 @@ def extract_audio_from_hls(hls_url: str, out_wav: Path, sample_rate: int = 16000
     """
     out_wav = Path(out_wav)
     out_wav.parent.mkdir(parents=True, exist_ok=True)
+
+    def _ffmpeg_http_headers(url: str) -> str:
+        """
+        Some HLS providers block ffmpeg without browser-like headers.
+        Add a reasonable User-Agent + Referer to improve compatibility.
+        """
+        p = urlparse(url)
+        # Best-effort referer: same origin as the resource itself.
+        referer = f"{p.scheme}://{p.netloc}/" if p.scheme and p.netloc else ""
+        user_agent = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        )
+        headers = [f"User-Agent: {user_agent}"]
+        if referer:
+            headers.append(f"Referer: {referer}")
+        # ffmpeg -headers expects CRLF separated header lines.
+        return "\r\n".join(headers) + "\r\n"
     
     # スタンドFMのURLはyt-dlpで処理（最も確実）
     if 'stand.fm' in hls_url.lower():
@@ -74,6 +94,7 @@ def extract_audio_from_hls(hls_url: str, out_wav: Path, sample_rate: int = 16000
             "ffmpeg",
             "-y",
             "-loglevel", "error",  # エラーのみ出力
+            "-headers", _ffmpeg_http_headers(hls_url),
             "-i", hls_url,
             "-vn",  # 映像なし
             "-acodec", "pcm_s16le",
@@ -170,6 +191,7 @@ def extract_audio_from_hls(hls_url: str, out_wav: Path, sample_rate: int = 16000
             "ffmpeg",
             "-y",
             "-loglevel", "error",  # エラーのみ出力
+            "-headers", _ffmpeg_http_headers(hls_url),
             "-i",
             hls_url,
             "-vn",

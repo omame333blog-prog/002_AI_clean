@@ -3,675 +3,312 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>詐欺案件の地図 | 図解デザイナー講座</title>
+<title>0→1の壁を突破する 案件獲得ワーク | 図解デザイナー講座</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
-  :root {
-    --bg:        #f0edea;
-    --bg2:       #e8e4e0;
-    --bg3:       #dedad5;
-    --border:    rgba(0,0,0,0.08);
-    --amber:     #c8860a;
-    --amber-dim: rgba(200,134,10,0.1);
-    --red:       #c04040;
-    --red-dim:   rgba(192,64,64,0.08);
-    --green:     #2e9469;
-    --green-dim: rgba(46,148,105,0.08);
-    --cream:     #1c1814;
-    --text:      #3a3530;
-    --text-dim:  rgba(58,53,48,0.5);
-    --serif:     'Noto Serif JP', serif;
-    --sans:      'Noto Sans JP', sans-serif;
-    --mono:      'DM Mono', monospace;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.8;
-    overflow-x: hidden;
-  }
-
-  /* ── PROGRESS BAR ── */
-  #progress-bar {
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    width: 0%;
-    background: linear-gradient(90deg, var(--amber), var(--red));
-    z-index: 100;
-    transition: width 0.1s linear;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 90;
-    padding: 1rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: linear-gradient(to bottom, rgba(240,237,234,0.95) 0%, transparent 100%);
-    backdrop-filter: blur(4px);
-  }
-  nav .label {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-  nav .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--amber);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8rem 2rem 4rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 60% 60% at 80% 20%, rgba(200,134,10,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(192,64,64,0.04) 0%, transparent 60%);
-    pointer-events: none;
-  }
-
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
-  }
-
-  .hero-inner {
-    max-width: 800px;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-  }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--amber);
-    text-transform: uppercase;
-    border: 1px solid rgba(245,166,35,0.3);
-    padding: 0.35rem 0.75rem;
-    border-radius: 2px;
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.2s ease forwards;
-  }
-
-  .hero-title {
-    font-family: var(--serif);
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    font-weight: 900;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--cream);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.4s ease forwards;
-  }
-
-  .hero-title em {
-    font-style: normal;
-    color: var(--amber);
-    position: relative;
-  }
-
-  .hero-sub {
-    font-size: 1rem;
-    color: var(--text-dim);
-    max-width: 540px;
-    margin-bottom: 3rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.6s ease forwards;
-  }
-
-  .hero-quote {
-    border-left: 2px solid var(--red);
-    padding: 0.75rem 1.25rem;
-    background: var(--red-dim);
-    border-radius: 0 4px 4px 0;
-    font-size: 0.9rem;
-    color: var(--text);
-    margin-bottom: 3rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.8s ease forwards;
-  }
-
-  .hero-quote strong { color: #e07070; }
-
-  .scroll-hint {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fadeUp 0.8s 1.1s ease forwards;
-  }
-  .scroll-hint span {
-    display: inline-block;
-    animation: bounce 1.5s ease-in-out infinite;
-  }
-  @keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(4px); }
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── SECTIONS ── */
-  section {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 5rem 2rem;
-  }
-
-  .section-num {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--amber);
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-  }
-
-  .section-title {
-    font-family: var(--serif);
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    font-weight: 700;
-    color: var(--cream);
-    line-height: 1.4;
-    margin-bottom: 0.5rem;
-  }
-
-  .section-desc {
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    margin-bottom: 2.5rem;
-  }
-
-  .divider {
-    width: 40px;
-    height: 2px;
-    background: var(--amber);
-    margin: 1.25rem 0 2.5rem;
-    border: none;
-  }
-
-  /* ── PREMISE CARDS ── */
-  .premise-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .premise-card {
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .premise-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-    transform: translateY(-2px);
-  }
-
-  .premise-icon {
-    font-size: 1.4rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .premise-heading {
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--cream);
-    margin-bottom: 0.4rem;
-  }
-
-  .premise-text {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    line-height: 1.7;
-  }
-
-  .premise-highlight {
-    grid-column: 1 / -1;
-    background: var(--amber-dim);
-    border: 1px solid rgba(200,134,10,0.2);
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    font-size: 0.85rem;
-    color: var(--amber);
-    text-align: center;
-    font-weight: 500;
-  }
-
-  /* ── WARNING SIGNS ── */
-  .warning-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .warning-item {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--red);
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
-  }
-
-  .warning-item:hover { background: var(--bg3); border-left-color: var(--amber); }
-  .warning-item.open { border-left-color: var(--amber); }
-
-  .warning-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.1rem 1.25rem;
-  }
-
-  .warning-num {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    flex-shrink: 0;
-    width: 20px;
-  }
-
-  .warning-label {
-    font-size: 0.85rem;
-    color: var(--red);
-    font-family: var(--mono);
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-
-  .warning-title {
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: var(--cream);
-    flex: 1;
-  }
-
-  .warning-chevron {
-    color: var(--text-dim);
-    font-size: 0.7rem;
-    transition: transform 0.2s;
-  }
-  .warning-item.open .warning-chevron { transform: rotate(180deg); }
-
-  .warning-body {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-  .warning-item.open .warning-body { max-height: 200px; }
-
-  .warning-body-inner {
-    padding: 0 1.25rem 1.25rem 4rem;
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    line-height: 1.8;
-    border-top: 1px solid var(--border);
-    padding-top: 0.9rem;
-    margin-top: 0;
-  }
-
-  .warning-body-inner strong { color: var(--amber); }
-
-  /* ── PATTERN GRID ── */
-  .pattern-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .pattern-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-
-  .pattern-card::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 60px; height: 60px;
-    border-radius: 0 6px 0 100%;
-    background: var(--red-dim);
-  }
-
-  .pattern-card:hover { transform: translateY(-2px); border-color: rgba(224,82,82,0.3); }
-
-  .pattern-num {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--red);
-    letter-spacing: 0.15em;
-    margin-bottom: 0.75rem;
-  }
-
-  .pattern-name {
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--cream);
-    margin-bottom: 0.5rem;
-  }
-
-  .pattern-text {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    line-height: 1.7;
-  }
-
-  .pattern-badge {
-    display: inline-block;
-    margin-top: 0.75rem;
-    font-family: var(--mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 0.2rem 0.5rem;
-    border-radius: 2px;
-    text-transform: uppercase;
-  }
-
-  .pattern-badge.most   { background: rgba(224,82,82,0.2); color: var(--red); }
-  .pattern-badge.warn   { background: var(--amber-dim); color: var(--amber); }
-  .pattern-badge.danger { background: rgba(224,82,82,0.15); color: var(--red); }
-
-  /* ── CHECKLIST ── */
-  .checklist-wrap {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .checklist-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .checklist-title-small {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  .checklist-counter {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    color: var(--amber);
-  }
-
-  .checklist-counter span {
-    font-size: 1.1rem;
-    font-weight: 500;
-  }
-
-  .checklist-items { padding: 0.5rem 0; }
-
-  .check-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 0.85rem 1.5rem;
-    cursor: pointer;
-    transition: background 0.15s;
-    border-bottom: 1px solid var(--border);
-  }
-  .check-item:last-child { border-bottom: none; }
-  .check-item:hover { background: rgba(0,0,0,0.04); }
-
-  .check-box {
-    width: 18px; height: 18px;
-    border: 1.5px solid rgba(0,0,0,0.3);
-    border-radius: 3px;
-    flex-shrink: 0;
-    margin-top: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s, border-color 0.15s;
-    font-size: 0.7rem;
-  }
-
-  .check-item.checked .check-box {
-    background: var(--red);
-    border-color: var(--red);
-    color: white;
-  }
-
-  .check-text {
-    font-size: 0.88rem;
-    color: var(--text);
-    line-height: 1.6;
-    transition: color 0.15s;
-  }
-
-  .check-item.checked .check-text {
-    color: var(--text-dim);
-    text-decoration: line-through;
-  }
-
-  .checklist-result {
-    margin: 0 1.5rem 1.25rem;
-    padding: 1rem 1.25rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    display: none;
-    line-height: 1.7;
-  }
-
-  .result-danger {
-    background: var(--red-dim);
-    border: 1px solid rgba(224,82,82,0.25);
-    color: #e07070;
-    display: block;
-  }
-
-  .result-caution {
-    background: var(--amber-dim);
-    border: 1px solid rgba(245,166,35,0.25);
-    color: var(--amber);
-    display: block;
-  }
-
-  .result-safe {
-    background: var(--green-dim);
-    border: 1px solid rgba(79,187,138,0.25);
-    color: var(--green);
-    display: block;
-  }
-
-  /* ── SAFE POINTS ── */
-  .safe-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .safe-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    background: var(--green-dim);
-    border: 1px solid rgba(79,187,138,0.15);
-    border-left: 3px solid var(--green);
-    border-radius: 4px;
-    font-size: 0.88rem;
-    color: var(--text);
-    transition: background 0.2s;
-  }
-
-  .safe-item:hover { background: rgba(79,187,138,0.12); }
-
-  .safe-icon { color: var(--green); flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
-
-  /* ── SUMMARY ── */
-  .summary-box {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .summary-top {
-    background: linear-gradient(135deg, rgba(245,166,35,0.08), rgba(224,82,82,0.06));
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    text-align: center;
-  }
-
-  .summary-top p {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  .summary-top h3 {
-    font-family: var(--serif);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--cream);
-  }
-
-  .summary-items {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .summary-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .summary-num {
-    font-family: var(--mono);
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--amber);
-    flex-shrink: 0;
-    line-height: 1;
-    padding-top: 4px;
-  }
-
-  .summary-text strong {
-    display: block;
-    font-family: var(--serif);
-    font-size: 0.95rem;
-    color: var(--cream);
-    margin-bottom: 0.2rem;
-  }
-
-  .summary-text span {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 2rem;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
-  /* ── SCROLL ANIMATION ── */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .premise-grid { grid-template-columns: 1fr; }
-    .pattern-grid { grid-template-columns: 1fr; }
-    .hero-title { font-size: 1.8rem; }
-    section { padding: 3.5rem 1.25rem; }
-  }
+/* ── VARIABLES ── */
+:root {
+  --bg:#f0edea; --bg2:#e8e4e0; --bg3:#dedad5;
+  --border:rgba(0,0,0,0.08);
+  --amber:#c8860a; --amber-dim:rgba(200,134,10,0.1);
+  --red:#c04040; --red-dim:rgba(192,64,64,0.08);
+  --green:#2e9469; --green-dim:rgba(46,148,105,0.08);
+  --blue:#2a6db5; --blue-dim:rgba(42,109,181,0.08);
+  --cream:#1c1814; --text:#3a3530; --text-dim:rgba(58,53,48,0.5);
+  --serif:'Noto Serif JP',serif; --sans:'Noto Sans JP',sans-serif; --mono:'DM Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.8;overflow-x:hidden;}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,var(--amber),var(--green),var(--blue));z-index:100;transition:width 0.1s linear;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:90;padding:0.8rem 2rem;display:flex;align-items:center;gap:1rem;background:linear-gradient(to bottom,rgba(240,237,234,0.97) 0%,transparent 100%);backdrop-filter:blur(4px);}
+nav .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
+nav .label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;color:var(--text-dim);text-transform:uppercase;flex:1;}
+.nav-parts{display:flex;gap:0.15rem;align-items:center;}
+.nav-part{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-decoration:none;padding:0.28rem 0.55rem;border-radius:3px;transition:color 0.15s,background 0.15s;white-space:nowrap;}
+.nav-part:hover{color:var(--cream);background:rgba(0,0,0,0.07);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
+
+/* ── PART DIVIDER ── */
+.part-divider{max-width:800px;margin:0 auto;padding:2rem 2rem 0;display:flex;align-items:center;gap:1.25rem;}
+.part-divider-line{flex:1;height:1px;background:var(--border);}
+.part-divider-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;white-space:nowrap;}
+
+/* ── HERO BASE ── */
+.hero{display:flex;flex-direction:column;justify-content:center;padding:8rem 2rem 4rem;position:relative;overflow:hidden;}
+#part1 .hero{min-height:100vh;}
+#part2 .hero,#part3 .hero{min-height:70vh;padding:6rem 2rem 3rem;}
+#part1 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 20%,rgba(200,134,10,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 10% 80%,rgba(192,64,64,0.04) 0%,transparent 60%);pointer-events:none;}
+#part2 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 75% 30%,rgba(46,148,105,0.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 15% 70%,rgba(200,134,10,0.05) 0%,transparent 60%);pointer-events:none;}
+#part3 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 50% at 70% 30%,rgba(200,134,10,0.07) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 20% 70%,rgba(42,109,181,0.05) 0%,transparent 60%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 100%);}
+.hero-inner{max-width:800px;margin:0 auto;width:100%;position:relative;}
+.hero-tag{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.7rem;letter-spacing:0.2em;color:var(--amber);text-transform:uppercase;border:1px solid rgba(200,134,10,0.3);padding:0.35rem 0.75rem;border-radius:2px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.2s ease forwards;}
+#part2 .hero-tag{color:var(--green);border-color:rgba(46,148,105,0.3);}
+.hero-title{font-family:var(--serif);font-weight:900;line-height:1.35;color:var(--cream);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.8s 0.4s ease forwards;}
+#part1 .hero-title{font-size:clamp(2rem,6vw,3.5rem);line-height:1.3;letter-spacing:-0.01em;}
+#part2 .hero-title,#part3 .hero-title{font-size:clamp(1.8rem,5vw,3rem);}
+.hero-title em{font-style:normal;color:var(--amber);}
+#part2 .hero-title em{color:var(--green);}
+.hero-sub{font-size:0.95rem;color:var(--text-dim);line-height:1.8;max-width:540px;opacity:0;animation:fadeUp 0.8s 0.6s ease forwards;}
+#part1 .hero-sub{font-size:1rem;margin-bottom:3rem;}
+.hero-quote{border-left:2px solid var(--red);padding:0.75rem 1.25rem;background:var(--red-dim);border-radius:0 4px 4px 0;font-size:0.9rem;color:var(--text);margin-bottom:3rem;opacity:0;animation:fadeUp 0.8s 0.8s ease forwards;}
+.hero-quote strong{color:#e07070;}
+.scroll-hint{display:flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.15em;color:var(--text-dim);text-transform:uppercase;opacity:0;animation:fadeUp 0.8s 1.1s ease forwards;}
+.scroll-hint span{display:inline-block;animation:bounce 1.5s ease-in-out infinite;}
+.hero-axis{display:flex;gap:0;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.8s 0.6s ease forwards;}
+.axis-box{flex:1;padding:1.1rem 1.25rem;font-size:0.85rem;line-height:1.6;border:1px solid var(--border);}
+.axis-box:first-child{background:var(--red-dim);border-color:rgba(192,64,64,0.15);border-radius:6px 0 0 6px;}
+.axis-box:last-child{background:var(--green-dim);border-color:rgba(46,148,105,0.15);border-radius:0 6px 6px 0;}
+.axis-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem;display:block;}
+.axis-box:first-child .axis-label{color:var(--red);}
+.axis-box:last-child .axis-label{color:var(--green);}
+.axis-box strong{display:block;font-family:var(--serif);font-size:0.92rem;color:var(--cream);}
+.axis-arrow{width:40px;display:flex;align-items:center;justify-content:center;background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--text-dim);font-size:0.8rem;flex-shrink:0;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+
+/* ── SECTIONS ── */
+section{max-width:800px;margin:0 auto;padding:5rem 2rem;border-bottom:1px solid var(--border);}
+.section-num{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--amber);text-transform:uppercase;margin-bottom:0.75rem;}
+#part2 .section-num{color:var(--green);}
+.section-title{font-family:var(--serif);font-size:clamp(1.4rem,4vw,2rem);font-weight:700;color:var(--cream);line-height:1.4;margin-bottom:0.5rem;}
+#part3 .section-title{font-weight:900;}
+.section-title em{font-style:normal;color:var(--amber);}
+.section-desc{font-size:0.9rem;color:var(--text-dim);margin-bottom:2rem;}
+.divider{width:40px;height:2px;background:var(--amber);margin:1.25rem 0 2.5rem;border:none;}
+#part2 .divider{background:var(--green);}
+#part3 .divider{width:auto;height:auto;background:transparent;border-top:1px solid var(--border);margin-bottom:2.5rem;}
+
+/* ── PART1: PREMISE ── */
+.premise-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+.premise-card{background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);transition:box-shadow 0.2s,transform 0.2s;}
+.premise-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.1);transform:translateY(-2px);}
+.premise-icon{font-size:1.4rem;margin-bottom:0.75rem;}
+.premise-heading{font-family:var(--serif);font-weight:700;font-size:0.95rem;color:var(--cream);margin-bottom:0.4rem;}
+.premise-text{font-size:0.82rem;color:var(--text-dim);line-height:1.7;}
+.premise-highlight{grid-column:1/-1;background:var(--amber-dim);border:1px solid rgba(200,134,10,0.2);border-radius:8px;padding:1rem 1.5rem;font-size:0.85rem;color:var(--amber);text-align:center;font-weight:500;}
+
+/* ── PART1: WARNING ── */
+.warning-list{display:flex;flex-direction:column;gap:1rem;}
+.warning-item{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:4px;overflow:hidden;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+.warning-item:hover{background:var(--bg3);border-left-color:var(--amber);}
+.warning-item.open{border-left-color:var(--amber);}
+.warning-header{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.25rem;}
+.warning-num{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);flex-shrink:0;width:20px;}
+.warning-label{font-size:0.85rem;color:var(--red);font-family:var(--mono);letter-spacing:0.05em;flex-shrink:0;}
+.warning-title{font-family:var(--serif);font-weight:700;font-size:0.95rem;color:var(--cream);flex:1;}
+.warning-chevron{color:var(--text-dim);font-size:0.7rem;transition:transform 0.2s;}
+.warning-item.open .warning-chevron{transform:rotate(180deg);}
+.warning-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+.warning-item.open .warning-body{max-height:200px;}
+.warning-body-inner{padding:0.9rem 1.25rem 1.25rem 4rem;font-size:0.85rem;color:var(--text-dim);line-height:1.8;border-top:1px solid var(--border);}
+.warning-body-inner strong{color:var(--amber);}
+
+/* ── PART1: PATTERN ── */
+.pattern-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.pattern-card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1.5rem;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;}
+.pattern-card::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;border-radius:0 6px 0 100%;background:var(--red-dim);}
+.pattern-card:hover{transform:translateY(-2px);border-color:rgba(224,82,82,0.3);}
+.pattern-num{font-family:var(--mono);font-size:0.65rem;color:var(--red);letter-spacing:0.15em;margin-bottom:0.75rem;}
+.pattern-name{font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--cream);margin-bottom:0.5rem;}
+.pattern-text{font-size:0.8rem;color:var(--text-dim);line-height:1.7;}
+.pattern-badge{display:inline-block;margin-top:0.75rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;padding:0.2rem 0.5rem;border-radius:2px;text-transform:uppercase;}
+.pattern-badge.most{background:rgba(224,82,82,0.2);color:var(--red);}
+.pattern-badge.warn{background:var(--amber-dim);color:var(--amber);}
+.pattern-badge.danger{background:rgba(224,82,82,0.15);color:var(--red);}
+
+/* ── PART1: CHECKLIST ── */
+.checklist-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.checklist-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.checklist-title-small{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;color:var(--text-dim);text-transform:uppercase;}
+.checklist-counter{font-family:var(--mono);font-size:0.8rem;color:var(--amber);}
+.checklist-counter span{font-size:1.1rem;font-weight:500;}
+.checklist-items{padding:0.5rem 0;}
+.check-item{display:flex;align-items:flex-start;gap:1rem;padding:0.85rem 1.5rem;cursor:pointer;transition:background 0.15s;border-bottom:1px solid var(--border);}
+.check-item:last-child{border-bottom:none;}
+.check-item:hover{background:rgba(0,0,0,0.04);}
+.check-box{width:18px;height:18px;border:1.5px solid rgba(0,0,0,0.3);border-radius:3px;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:background 0.15s,border-color 0.15s;font-size:0.7rem;}
+.check-item.checked .check-box{background:var(--red);border-color:var(--red);color:white;}
+.check-text{font-size:0.88rem;color:var(--text);line-height:1.6;transition:color 0.15s;}
+.check-item.checked .check-text{color:var(--text-dim);text-decoration:line-through;}
+.checklist-result{margin:0 1.5rem 1.25rem;padding:1rem 1.25rem;border-radius:4px;font-size:0.85rem;display:none;line-height:1.7;}
+.result-danger{background:var(--red-dim);border:1px solid rgba(224,82,82,0.25);color:#e07070;display:block;}
+.result-caution{background:var(--amber-dim);border:1px solid rgba(245,166,35,0.25);color:var(--amber);display:block;}
+.result-safe{background:var(--green-dim);border:1px solid rgba(79,187,138,0.25);color:var(--green);display:block;}
+
+/* ── PART1: SAFE LIST ── */
+.safe-list{display:flex;flex-direction:column;gap:0.75rem;}
+.safe-item{display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.25rem;background:var(--green-dim);border:1px solid rgba(79,187,138,0.15);border-left:3px solid var(--green);border-radius:4px;font-size:0.88rem;color:var(--text);transition:background 0.2s;}
+.safe-item:hover{background:rgba(79,187,138,0.12);}
+.safe-icon{color:var(--green);flex-shrink:0;font-size:1rem;margin-top:1px;}
+
+/* ── SUMMARY (shared + scoped) ── */
+.summary-box{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.07);}
+#part1 .summary-box{background:var(--bg2);box-shadow:none;border-radius:8px;}
+.summary-top{padding:1.5rem;border-bottom:1px solid var(--border);text-align:center;}
+#part1 .summary-top{background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(224,82,82,0.06));}
+#part2 .summary-top{background:linear-gradient(135deg,rgba(46,148,105,0.07),rgba(200,134,10,0.05));}
+#part3 .summary-top{background:linear-gradient(135deg,rgba(200,134,10,0.07),rgba(42,109,181,0.05));}
+.summary-top p{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:0.4rem;}
+.summary-top h3{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--cream);}
+.summary-items{padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem;}
+.summary-item{display:flex;gap:1rem;align-items:flex-start;}
+.summary-num{font-family:var(--mono);font-size:1.5rem;font-weight:500;flex-shrink:0;line-height:1;padding-top:4px;}
+#part1 .summary-num{color:var(--amber);}
+#part2 .summary-num{color:var(--green);}
+#part3 .summary-num{color:var(--amber);}
+.summary-text strong{display:block;font-family:var(--serif);font-size:0.95rem;color:var(--cream);margin-bottom:0.2rem;}
+.summary-text span{font-size:0.82rem;color:var(--text-dim);}
+
+/* ── PART2: FLOW ── */
+.flow-steps{display:flex;flex-direction:column;gap:0;position:relative;}
+.flow-steps::before{content:'';position:absolute;left:19px;top:20px;bottom:20px;width:2px;background:linear-gradient(to bottom,var(--green),rgba(46,148,105,0.1));}
+.flow-step{display:flex;align-items:flex-start;gap:1.25rem;padding:0.75rem 0;position:relative;}
+.flow-circle{width:40px;height:40px;border-radius:50%;background:#fff;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.75rem;font-weight:500;color:var(--green);flex-shrink:0;z-index:1;}
+.flow-content{padding:0.6rem 0;}
+.flow-label{font-family:var(--serif);font-weight:700;font-size:0.95rem;color:var(--cream);margin-bottom:0.2rem;}
+.flow-note{font-size:0.8rem;color:var(--text-dim);}
+.flow-work{background:rgba(46,148,105,0.08);border:1px solid rgba(46,148,105,0.2);border-radius:4px;padding:0.3rem 0.6rem;font-size:0.72rem;color:var(--green);font-family:var(--mono);letter-spacing:0.08em;display:inline-block;margin-top:0.3rem;}
+
+/* ── PART2: EXAMPLES ── */
+.examples-grid{display:flex;flex-direction:column;gap:1.75rem;}
+.example-card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.example-head{display:flex;align-items:center;gap:0.75rem;padding:0.9rem 1.25rem;background:var(--bg);border-bottom:1px solid var(--border);}
+.example-type{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;color:var(--red);text-transform:uppercase;background:var(--red-dim);border:1px solid rgba(192,64,64,0.15);padding:0.2rem 0.5rem;border-radius:2px;}
+.example-title{font-size:0.85rem;font-weight:700;color:var(--cream);}
+.example-body{padding:1.25rem;}
+.message-bubble{background:#f5f3f0;border:1px solid rgba(0,0,0,0.06);border-radius:8px;padding:1rem 1.1rem;font-size:0.88rem;color:var(--text);line-height:1.9;white-space:pre-wrap;font-family:var(--sans);margin-bottom:1rem;}
+.message-bubble.after{background:rgba(46,148,105,0.05);border-color:rgba(46,148,105,0.2);}
+.ng-points{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
+.ng-point{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.82rem;color:var(--text-dim);line-height:1.6;}
+.ng-point .mark{color:var(--red);flex-shrink:0;font-size:0.75rem;margin-top:3px;}
+.think-prompt{font-size:0.82rem;color:var(--text-dim);margin-bottom:0.75rem;font-style:italic;}
+.reveal-btn{display:inline-flex;align-items:center;gap:0.4rem;background:none;border:1.5px solid var(--green);color:var(--green);font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.45rem 0.9rem;border-radius:3px;cursor:pointer;transition:background 0.15s,color 0.15s;}
+.reveal-btn:hover{background:var(--green);color:#fff;}
+.after-box{display:none;margin-top:1.1rem;border-top:1px dashed rgba(46,148,105,0.3);padding-top:1.1rem;}
+.after-box.open{display:block;}
+.after-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.15em;color:var(--green);text-transform:uppercase;margin-bottom:0.6rem;}
+.after-points{display:flex;flex-direction:column;gap:0.4rem;margin-top:0.75rem;}
+.after-point{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;color:var(--text-dim);}
+.after-point .mark{color:var(--green);flex-shrink:0;}
+
+/* ── PART2: PRINCIPLE ── */
+.principle-box{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.principle-top{background:linear-gradient(135deg,rgba(46,148,105,0.08),rgba(200,134,10,0.05));padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border);}
+.principle-lead{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:0.75rem;}
+.principle-text{font-family:var(--serif);font-size:clamp(1rem,2.5vw,1.2rem);font-weight:700;color:var(--cream);line-height:1.6;}
+.principle-text em{font-style:normal;color:var(--green);}
+.principle-body{padding:1.5rem 2rem;display:flex;flex-direction:column;gap:1rem;}
+.principle-item{display:flex;gap:1rem;align-items:flex-start;}
+.principle-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+.principle-item-title{font-family:var(--serif);font-weight:700;font-size:0.92rem;color:var(--cream);margin-bottom:0.2rem;}
+.principle-item-text{font-size:0.82rem;color:var(--text-dim);line-height:1.65;}
+
+/* ── PART2: Q&A ── */
+.qa-grid{display:flex;flex-direction:column;gap:1.25rem;}
+.qa-card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.qa-head{display:flex;align-items:flex-start;gap:0.75rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);background:rgba(200,134,10,0.04);}
+.qa-badge{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(200,134,10,0.25);padding:0.25rem 0.5rem;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:2px;text-transform:uppercase;}
+.qa-q{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--cream);line-height:1.55;}
+.qa-body{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:0.9rem;}
+.qa-point{display:flex;align-items:flex-start;gap:0.6rem;font-size:0.85rem;color:var(--text);line-height:1.65;}
+.qa-icon{font-size:0.95rem;flex-shrink:0;margin-top:2px;}
+.qa-point strong{color:var(--cream);font-family:var(--serif);}
+.skill-table{width:100%;border-collapse:collapse;font-size:0.8rem;margin-top:0.5rem;}
+.skill-table th{background:var(--bg2);color:var(--text-dim);font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.45rem 0.75rem;text-align:left;border:1px solid var(--bg3);}
+.skill-table td{padding:0.55rem 0.75rem;border:1px solid var(--bg3);vertical-align:top;line-height:1.5;}
+.skill-table td:first-child{color:var(--text-dim);}
+.skill-table td:last-child{color:var(--cream);font-weight:500;}
+.qa-compare{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.25rem;}
+.qa-compare-box{padding:0.75rem 1rem;border-radius:6px;font-size:0.82rem;line-height:1.6;}
+.qa-compare-box.bad{background:var(--red-dim);border:1px solid rgba(192,64,64,0.15);color:var(--text-dim);}
+.qa-compare-box.good{background:var(--green-dim);border:1px solid rgba(46,148,105,0.15);color:var(--text);}
+.qa-compare-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
+.qa-compare-label.bad{color:var(--red);}
+.qa-compare-label.good{color:var(--green);}
+
+/* ── QUOTE BLOCK (scoped) ── */
+.quote-block{border-left:3px solid var(--amber);padding:0.75rem 1.25rem;background:var(--amber-dim);border-radius:0 6px 6px 0;font-family:var(--serif);font-size:0.95rem;color:var(--cream);line-height:1.7;margin:1.5rem 0;}
+#part2 .quote-block{border-left-color:var(--green);background:var(--green-dim);}
+
+/* ── PART3: WORRY ── */
+.worry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.75rem;margin-bottom:2rem;}
+.worry-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;font-size:0.85rem;color:var(--text);line-height:1.6;display:flex;gap:0.5rem;align-items:flex-start;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.worry-mark{color:var(--text-dim);flex-shrink:0;margin-top:2px;}
+
+/* ── PART3: TRUTH BOX ── */
+.truth-box{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.06);}
+.truth-top{background:linear-gradient(135deg,rgba(200,134,10,0.07),rgba(42,109,181,0.04));padding:1.75rem 2rem;border-bottom:1px solid var(--border);}
+.truth-lead{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--text-dim);text-transform:uppercase;margin-bottom:0.6rem;}
+.truth-text{font-family:var(--serif);font-size:clamp(1rem,2.5vw,1.15rem);font-weight:700;color:var(--cream);line-height:1.6;}
+.truth-text em{font-style:normal;color:var(--amber);}
+.truth-body{padding:1.5rem 2rem;display:flex;flex-direction:column;gap:0.9rem;}
+.truth-item{display:flex;gap:0.75rem;align-items:flex-start;font-size:0.85rem;color:var(--text);line-height:1.65;}
+.truth-item strong{color:var(--cream);font-family:var(--serif);}
+
+/* ── PART3: PRICE STEPS ── */
+.price-steps{display:flex;flex-direction:column;gap:0;}
+.price-step{display:flex;gap:1.5rem;align-items:flex-start;padding:1.75rem 0;border-bottom:1px dashed var(--border);position:relative;}
+.price-step:last-child{border-bottom:none;}
+.step-left{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+.step-num{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;}
+.step-badge{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:0.5rem 0.75rem;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,0.05);min-width:90px;}
+.step-badge .price{font-family:var(--mono);font-size:1.05rem;font-weight:500;color:var(--amber);display:block;line-height:1.2;}
+.step-badge .price-sub{font-size:0.65rem;color:var(--text-dim);margin-top:2px;display:block;}
+.step-right{flex:1;padding-top:0.1rem;}
+.step-title{font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--cream);margin-bottom:0.5rem;}
+.step-desc{font-size:0.85rem;color:var(--text-dim);line-height:1.65;}
+.step-tag{display:inline-block;margin-top:0.6rem;font-family:var(--mono);font-size:0.6rem;letter-spacing:0.08em;background:var(--amber-dim);color:var(--amber);border:1px solid rgba(200,134,10,0.2);padding:0.2rem 0.5rem;border-radius:3px;text-transform:uppercase;}
+
+/* ── PART3: ESTIMATE ── */
+.estimate-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.estimate-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.estimate-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.5rem;}
+.estimate-label.q{color:var(--red);}
+.estimate-label.a{color:var(--green);}
+.estimate-q{font-size:0.85rem;color:var(--text);line-height:1.6;font-style:italic;}
+.estimate-a{font-size:0.85rem;color:var(--text);line-height:1.65;}
+.estimate-a strong{color:var(--cream);}
+
+/* ── PART3: MINDSET ── */
+.mindset-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.mindset-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.25rem;box-shadow:0 1px 6px rgba(0,0,0,0.04);display:flex;flex-direction:column;gap:0.5rem;}
+.mindset-icon{font-size:1.4rem;}
+.mindset-title{font-family:var(--serif);font-weight:700;font-size:0.9rem;color:var(--cream);}
+.mindset-text{font-size:0.82rem;color:var(--text-dim);line-height:1.65;}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  nav .label{display:none;}
+  .premise-grid,.pattern-grid{grid-template-columns:1fr;}
+  .hero-axis{flex-direction:column;}
+  .axis-box:first-child{border-radius:6px 6px 0 0;}
+  .axis-box:last-child{border-radius:0 0 6px 6px;}
+  .axis-arrow{width:100%;height:32px;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);}
+  .qa-compare,.estimate-grid,.mindset-grid{grid-template-columns:1fr;}
+  .price-step{flex-direction:column;gap:0.75rem;}
+  .step-left{flex-direction:row;align-items:center;gap:0.75rem;}
+  section{padding:3.5rem 1.25rem;}
+  #part1 .hero-title{font-size:1.8rem;}
+  #part2 .hero-title,#part3 .hero-title{font-size:1.6rem;}
+}
 </style>
 </head>
 <body>
@@ -681,16 +318,22 @@
 <nav>
   <div class="dot"></div>
   <span class="label">図解デザイナー講座 / 勉強会資料</span>
+  <div class="nav-parts">
+    <a href="#part1" class="nav-part">Part 01</a>
+    <a href="#part2" class="nav-part">Part 02</a>
+    <a href="#part3" class="nav-part">おまけ</a>
+  </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ══════════════════════════════════════════
+     PART 01 — 詐欺案件の地図
+═══════════════════════════════════════════ -->
+<div id="part1">
+
 <div class="hero">
   <div class="hero-grid"></div>
   <div class="hero-inner">
-    <div class="hero-tag">
-      <span>◆</span>
-      <span>Part 01 — 詐欺案件の地図</span>
-    </div>
+    <div class="hero-tag"><span>◆</span><span>Part 01 — 詐欺案件の地図</span></div>
     <h1 class="hero-title">
       「全部詐欺に<em>見えてきた</em>」<br>
       そのまま動けなくなるのが<br>
@@ -699,20 +342,16 @@
     <p class="hero-sub">
       知識を持って動けば、在宅ワークはとても豊かな選択肢になります。<br>
       このパートのゴールは「詐欺に詳しくなること」ではなく、<br>
-      <strong style="color: var(--cream);">「安心して応募できるようになること」</strong>です。
+      <strong style="color:var(--cream);">「安心して応募できるようになること」</strong>です。
     </p>
     <blockquote class="hero-quote">
       💬 「30件応募しても連絡が来ない」「怖くて応募できなくなってきた」<br>
       <strong>— 受講生の日報より</strong>
     </blockquote>
-    <div class="scroll-hint">
-      <span>↓</span>
-      <span>scroll to explore</span>
-    </div>
+    <div class="scroll-hint"><span>↓</span><span>scroll to explore</span></div>
   </div>
 </div>
 
-<!-- ── SECTION 01: 前提 ── -->
 <section>
   <div class="section-num reveal">Section 01</div>
   <h2 class="section-title reveal">まず「前提」を知っておこう</h2>
@@ -738,99 +377,64 @@
       <div class="premise-heading">ターゲットは初心者・駆け出し</div>
       <div class="premise-text">特にデザイン・AI・ライター系の初心者が狙われやすい。低単価案件ほど多い傾向がある。</div>
     </div>
-    <div class="premise-highlight">
-      知っておけば怖くない。正しく見極めれば、安心して動ける。
-    </div>
+    <div class="premise-highlight">知っておけば怖くない。正しく見極めれば、安心して動ける。</div>
   </div>
 </section>
 
-<!-- ── SECTION 02: 怪しいサイン ── -->
 <section>
   <div class="section-num reveal">Section 02</div>
   <h2 class="section-title reveal">怪しい募集文の「5つのサイン」</h2>
   <p class="section-desc reveal">アカウントの評価より、募集文・募集条件にサインが出やすいのが最近の傾向。</p>
   <hr class="divider reveal">
-
   <div class="warning-list">
     <div class="warning-item reveal" onclick="toggleWarning(this)">
       <div class="warning-header">
-        <span class="warning-num">01</span>
-        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-num">01</span><span class="warning-label">⚠ SIGN</span>
         <span class="warning-title">「初心者歓迎」が強調されている</span>
         <span class="warning-chevron">▼</span>
       </div>
-      <div class="warning-body">
-        <div class="warning-body-inner">
-          <strong>なぜ危険？</strong> 本当に仕事をお願いしたい場合、初心者かどうかより「できるかどうか」を見ます。タイトルに強調されている場合は、稼げていない現実に不安を感じている人を集めるための言葉です。
-        </div>
-      </div>
+      <div class="warning-body"><div class="warning-body-inner"><strong>なぜ危険？</strong> 本当に仕事をお願いしたい場合、初心者かどうかより「できるかどうか」を見ます。タイトルに強調されている場合は、稼げていない現実に不安を感じている人を集めるための言葉です。</div></div>
     </div>
-
     <div class="warning-item reveal reveal-delay-1" onclick="toggleWarning(this)">
       <div class="warning-header">
-        <span class="warning-num">02</span>
-        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-num">02</span><span class="warning-label">⚠ SIGN</span>
         <span class="warning-title">「将来どうなりたい？」を聞いてくる</span>
         <span class="warning-chevron">▼</span>
       </div>
-      <div class="warning-body">
-        <div class="warning-body-inner">
-          <strong>なぜ危険？</strong> 仕事の依頼なら「得意なソフトは？」「週何時間作業できますか？」が自然。理想と現実のギャップを広げてセールスするための質問です。
-        </div>
-      </div>
+      <div class="warning-body"><div class="warning-body-inner"><strong>なぜ危険？</strong> 仕事の依頼なら「得意なソフトは？」「週何時間作業できますか？」が自然。理想と現実のギャップを広げてセールスするための質問です。</div></div>
     </div>
-
     <div class="warning-item reveal reveal-delay-2" onclick="toggleWarning(this)">
       <div class="warning-header">
-        <span class="warning-num">03</span>
-        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-num">03</span><span class="warning-label">⚠ SIGN</span>
         <span class="warning-title">「FB付き」が特典として書かれている</span>
         <span class="warning-chevron">▼</span>
       </div>
-      <div class="warning-body">
-        <div class="warning-body-inner">
-          <strong>なぜ危険？</strong> 普通の仕事に修正・フィードバックがあるのは当たり前。それをわざわざ「特典」として書くのは不自然で、仕事ではなく教育（講座）の匂いがします。
-        </div>
-      </div>
+      <div class="warning-body"><div class="warning-body-inner"><strong>なぜ危険？</strong> 普通の仕事に修正・フィードバックがあるのは当たり前。それをわざわざ「特典」として書くのは不自然で、仕事ではなく教育（講座）の匂いがします。</div></div>
     </div>
-
     <div class="warning-item reveal reveal-delay-1" onclick="toggleWarning(this)">
       <div class="warning-header">
-        <span class="warning-num">04</span>
-        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-num">04</span><span class="warning-label">⚠ SIGN</span>
         <span class="warning-title">単価がちょっとだけ高い（300〜500円）</span>
         <span class="warning-chevron">▼</span>
       </div>
-      <div class="warning-body">
-        <div class="warning-body-inner">
-          <strong>なぜ危険？</strong> 低すぎると誰も応募しない。「応募したくなるライン」に絶妙に設定されています。本当にいい案件はテスト単価が低くても、継続で上がっていく流れがある。
-        </div>
-      </div>
+      <div class="warning-body"><div class="warning-body-inner"><strong>なぜ危険？</strong> 低すぎると誰も応募しない。「応募したくなるライン」に絶妙に設定されています。本当にいい案件はテスト単価が低くても、継続で上がっていく流れがある。</div></div>
     </div>
-
     <div class="warning-item reveal reveal-delay-2" onclick="toggleWarning(this)">
       <div class="warning-header">
-        <span class="warning-num">05</span>
-        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-num">05</span><span class="warning-label">⚠ SIGN</span>
         <span class="warning-title">「自由な働き方・継続・高評価」を強調</span>
         <span class="warning-chevron">▼</span>
       </div>
-      <div class="warning-body">
-        <div class="warning-body-inner">
-          <strong>なぜ危険？</strong> 仕事の内容ではなく「未来の生活」を売っています。この手の言葉が並ぶ募集文は、仕事を依頼したいのではなく、コンタクトを取ることが目的の可能性が高い。
-        </div>
-      </div>
+      <div class="warning-body"><div class="warning-body-inner"><strong>なぜ危険？</strong> 仕事の内容ではなく「未来の生活」を売っています。この手の言葉が並ぶ募集文は、仕事を依頼したいのではなく、コンタクトを取ることが目的の可能性が高い。</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── SECTION 03: 実際のパターン ── -->
 <section>
   <div class="section-num reveal">Section 03</div>
   <h2 class="section-title reveal">受講生が遭遇したリアル</h2>
   <p class="section-desc reveal">実際に被害・遭遇した体験談をパターン化しました。</p>
   <hr class="divider reveal">
-
   <div class="pattern-grid">
     <div class="pattern-card reveal">
       <div class="pattern-num">Pattern 01</div>
@@ -859,97 +463,49 @@
   </div>
 </section>
 
-<!-- ── SECTION 04: チェックリスト ── -->
 <section>
   <div class="section-num reveal">Section 04</div>
   <h2 class="section-title reveal">応募前チェックリスト</h2>
   <p class="section-desc reveal">気になる案件に当てはめてみてください。チェックが多いほど要注意。</p>
   <hr class="divider reveal">
-
   <div class="checklist-wrap reveal">
     <div class="checklist-header">
       <span class="checklist-title-small">Checklist — 応募前に確認</span>
       <span class="checklist-counter">チェック数: <span id="count">0</span> / 7</span>
     </div>
     <div class="checklist-items" id="checklist">
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">「初心者歓迎」がタイトルや本文で強調されている</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">応募フォームや最初のメッセージで「将来の目標・理想の働き方」を聞いてくる</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">「丁寧にFBします」「成長できます」が特典として書かれている</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">依頼者の完了実績がゼロまたは極端に少ない</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">「20代限定」「既婚者不可」など生活スタイルを限定している</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">仮払いが確認できる前に作業開始を促してくる</div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"></div>
-        <div class="check-text">アカウントの提供・共有を採用条件にしている</div>
-      </div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">「初心者歓迎」がタイトルや本文で強調されている</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">応募フォームや最初のメッセージで「将来の目標・理想の働き方」を聞いてくる</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">「丁寧にFBします」「成長できます」が特典として書かれている</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">依頼者の完了実績がゼロまたは極端に少ない</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">「20代限定」「既婚者不可」など生活スタイルを限定している</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">仮払いが確認できる前に作業開始を促してくる</div></div>
+      <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">アカウントの提供・共有を採用条件にしている</div></div>
     </div>
-    <div class="checklist-result" id="result-danger">
-      🚨 <strong>3個以上：いったん保留。</strong> 質問部屋に持ってきてください。一人で判断しなくて大丈夫です。
-    </div>
-    <div class="checklist-result" id="result-caution">
-      ⚠️ <strong>1〜2個：様子見。</strong> 仮払いが確認できるまでは絶対に作業を始めないこと。
-    </div>
-    <div class="checklist-result" id="result-safe">
-      ✅ <strong>0個：問題なさそう。</strong> 次のポイント（安全な案件の見分け方）も合わせて確認してみてください。
-    </div>
+    <div class="checklist-result" id="result-danger">🚨 <strong>3個以上：いったん保留。</strong> 質問部屋に持ってきてください。一人で判断しなくて大丈夫です。</div>
+    <div class="checklist-result" id="result-caution">⚠️ <strong>1〜2個：様子見。</strong> 仮払いが確認できるまでは絶対に作業を始めないこと。</div>
+    <div class="checklist-result" id="result-safe">✅ <strong>0個：問題なさそう。</strong> 次のポイント（安全な案件の見分け方）も合わせて確認してみてください。</div>
   </div>
 </section>
 
-<!-- ── SECTION 05: 安全な案件 ── -->
 <section>
   <div class="section-num reveal">Section 05</div>
   <h2 class="section-title reveal">安全な案件の見分け方</h2>
   <p class="section-desc reveal">「詐欺かどうか」で見るより、「これが揃っているか」で判断するとラクになります。</p>
   <hr class="divider reveal">
-
   <div class="safe-list">
-    <div class="safe-item reveal">
-      <span class="safe-icon">✓</span>
-      <span>仕事の内容・納期・報酬が<strong style="color:var(--green)">具体的に書かれている</strong></span>
-    </div>
-    <div class="safe-item reveal reveal-delay-1">
-      <span class="safe-icon">✓</span>
-      <span>依頼者の<strong style="color:var(--green)">完了実績・評価</strong>がある</span>
-    </div>
-    <div class="safe-item reveal reveal-delay-1">
-      <span class="safe-icon">✓</span>
-      <span>質問が<strong style="color:var(--green)">仕事に直結している</strong>（得意ソフト・稼働時間など）</span>
-    </div>
-    <div class="safe-item reveal reveal-delay-2">
-      <span class="safe-icon">✓</span>
-      <span><strong style="color:var(--green)">仮払いが早い</strong>、または仮払い手順を明示している</span>
-    </div>
-    <div class="safe-item reveal reveal-delay-2">
-      <span class="safe-icon">✓</span>
-      <span>コミュニケーションが<strong style="color:var(--green)">丁寧・具体的</strong>で、急かしてこない</span>
-    </div>
+    <div class="safe-item reveal"><span class="safe-icon">✓</span><span>仕事の内容・納期・報酬が<strong style="color:var(--green)">具体的に書かれている</strong></span></div>
+    <div class="safe-item reveal reveal-delay-1"><span class="safe-icon">✓</span><span>依頼者の<strong style="color:var(--green)">完了実績・評価</strong>がある</span></div>
+    <div class="safe-item reveal reveal-delay-1"><span class="safe-icon">✓</span><span>質問が<strong style="color:var(--green)">仕事に直結している</strong>（得意ソフト・稼働時間など）</span></div>
+    <div class="safe-item reveal reveal-delay-2"><span class="safe-icon">✓</span><span><strong style="color:var(--green)">仮払いが早い</strong>、または仮払い手順を明示している</span></div>
+    <div class="safe-item reveal reveal-delay-2"><span class="safe-icon">✓</span><span>コミュニケーションが<strong style="color:var(--green)">丁寧・具体的</strong>で、急かしてこない</span></div>
   </div>
 </section>
 
-<!-- ── SECTION 06: まとめ ── -->
 <section>
   <div class="section-num reveal">Section 06</div>
   <h2 class="section-title reveal">3点だけ覚えて帰ってください</h2>
   <hr class="divider reveal">
-
   <div class="summary-box reveal">
     <div class="summary-top">
       <p>Key Takeaways</p>
@@ -958,84 +514,510 @@
     <div class="summary-items">
       <div class="summary-item reveal">
         <span class="summary-num">01</span>
-        <div class="summary-text">
-          <strong>「初心者歓迎 ＋ 将来の夢質問 ＋ FB付き」の3点セットは要警戒</strong>
-          <span>1つなら様子見でOK。3つ揃ったら迷わず保留にして相談を。</span>
-        </div>
+        <div class="summary-text"><strong>「初心者歓迎 ＋ 将来の夢質問 ＋ FB付き」の3点セットは要警戒</strong><span>1つなら様子見でOK。3つ揃ったら迷わず保留にして相談を。</span></div>
       </div>
       <div class="summary-item reveal reveal-delay-1">
         <span class="summary-num">02</span>
-        <div class="summary-text">
-          <strong>仮払い前は絶対に作業しない</strong>
-          <span>どんなに急かされても、これだけは守ってください。ルールではなく、自分を守るため。</span>
-        </div>
+        <div class="summary-text"><strong>仮払い前は絶対に作業しない</strong><span>どんなに急かされても、これだけは守ってください。ルールではなく、自分を守るため。</span></div>
       </div>
       <div class="summary-item reveal reveal-delay-2">
         <span class="summary-num">03</span>
-        <div class="summary-text">
-          <strong>引っかかっても自分を責めない・一人で抱え込まない</strong>
-          <span>相手はプロの詐欺師です。おかしいと思ったらすぐ質問部屋へ。</span>
+        <div class="summary-text"><strong>引っかかっても自分を責めない・一人で抱え込まない</strong><span>相手はプロの詐欺師です。おかしいと思ったらすぐ質問部屋へ。</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#part1 -->
+
+<!-- ══════════════════════════════════════════
+     PART 02 — 応募文ワーク
+═══════════════════════════════════════════ -->
+<div id="part2">
+
+<div class="part-divider">
+  <div class="part-divider-line"></div>
+  <div class="part-divider-label">◆ Part 02 — 応募文ワーク</div>
+  <div class="part-divider-line"></div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">◆ Part 02 — 応募文ワーク</div>
+    <h1 class="hero-title">
+      応募文は、<em>丁寧さをアピール</em><br>する場所じゃない。
+    </h1>
+    <div class="hero-axis">
+      <div class="axis-box">
+        <span class="axis-label">❌ よくある勘違い</span>
+        <strong>どれだけ丁寧に書けているかを見せる場所</strong>
+      </div>
+      <div class="axis-arrow">→</div>
+      <div class="axis-box">
+        <span class="axis-label">✓ 本当の役割</span>
+        <strong>相手が「採用するかどうか」を判断しやすくする場所</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="section-num reveal">Section 01</div>
+  <h2 class="section-title reveal">今日のワークの流れ</h2>
+  <p class="section-desc reveal">正解を出すワークじゃありません。「なんか引っかかる」と感じることが目的です。</p>
+  <hr class="divider reveal">
+  <div class="flow-steps reveal">
+    <div class="flow-step">
+      <div class="flow-circle">01</div>
+      <div class="flow-content"><div class="flow-label">ダメな応募文を読む</div><div class="flow-note">クライアントとして受け取ったつもりで読む</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">02</div>
+      <div class="flow-content"><div class="flow-label">「気になるところ」をメモする</div><div class="flow-note">どこが引っかかるか、何が足りないか</div><span class="flow-work">⏱ 2〜3分のワーク</span></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">03</div>
+      <div class="flow-content"><div class="flow-label">おまめ解説</div><div class="flow-note">なぜ採用されないのか、何がネックだったのか</div></div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">04</div>
+      <div class="flow-content"><div class="flow-label">改善後を並べて確認</div><div class="flow-note">Before / After を見比べる</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 02</div>
+  <h2 class="section-title reveal">あなたがクライアントなら、採用しますか？</h2>
+  <p class="section-desc reveal">以下の応募文を「受け取る側」として読んでみてください。</p>
+  <hr class="divider reveal">
+
+  <div class="examples-grid">
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern A</span>
+        <span class="example-title">「私を見てください」型 ― 自己PRに終始している</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募させていただきます。
+
+私はIT企業で人事・採用を6年担当しており、社内研修資料や採用説明会のスライドを数多く作成してきました。デザインにはずっと興味があり、最近Canvaも勉強しています。
+
+ママ向けのお仕事が特に得意です。また、AIツールも積極的に活用しており、効率よく進められます。
+
+テスト制作のあと、単価についても相談させていただけますでしょうか。
+
+どうぞよろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>「私はこういう人です」という自己紹介に終始。クライアントの悩みへの言及がゼロ</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「ママ向けが得意」→ママ向けかどうか不明な案件に書くと的外れになる</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>テスト前に単価交渉を持ち出している。まずは採用してもらうことに集中する</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオが添付されていない</span></div>
+        </div>
+        <p class="think-prompt">👉 クライアントは「この人に頼んだら、自分の悩みが解決できそう」と思えますか？</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。図解・一覧スライドの制作募集を拝見し、ご連絡しました。
+
+IT企業で人事・採用を6年担当し、研修資料や採用説明会スライドを社内向けに多数制作してきました。情報量が多い内容をシンプルに整理することが得意で、「パッと見てわかる」「説明しやすくなった」と言っていただくことが多いです。
+
+こちらの案件の「視認性を高めたい」というご要望にも、その強みでお役に立てると考えています。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>冒頭に「何の案件に応募しているか」を入れた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>経験年数を数字で書いて、実績の重みを一発で伝えた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「この案件のここで役に立てる」とつなげてから、言い切った</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern B</span>
+        <span class="example-title">「未経験ですが」型 ― これを書いた時点でほぼ終わり</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募いたします。
+
+フリーランスとしては未経験ですが、保険会社で契約書類や説明資料の作成を担当してきました。AIも使えますし、Canvaも扱えます。
+
+ご依頼いただければ、誠心誠意対応させていただきます。どうぞよろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>「フリーランスとしては未経験ですが」→この一言で即戦力感がゼロになる。絶対に書かない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「説明資料の作成を担当」→何年？どんな規模？数字がないと伝わらない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「AIも使えます」→どんな業務で？具体性がなければ書いても印象に残らない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオが添付されていない。判断する材料が何もない</span></div>
+        </div>
+        <p class="think-prompt">👉 「未経験」という言葉を入れる必要は本当にありますか？実績で語ればいい。</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。保険・金融向け説明スライドの制作募集を拝見し、ご連絡しました。
+
+保険会社で4年間、契約者向けの説明資料や社内研修スライドの作成を担当してきました。専門用語が多い内容をわかりやすく整理することが得意で、「お客様に説明しやすくなった」と支社内で言っていただいた経験があります。Canvaは業務でも日常的に使っています。
+
+こちらの案件のような、複雑な情報をわかりやすく伝えるスライド制作で特にお役に立てます。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>「未経験ですが」を外し、実務年数で実績を示した</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「支社内で言っていただいた」など、この人にしか言えないエピソードを入れた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>ポートフォリオを添付して、判断できる状態を作った</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern C</span>
+        <span class="example-title">「誰でも言える」型 ― 選ばれる理由がどこにもない</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募させていただきます。
+
+■ 経歴
+・食品メーカーで企画・事務を経験
+・AIを活用した業務効率化が得意
+・Canva、PowerPoint使用可能
+
+■ 強み
+・情報整理が得意です
+・柔軟に対応できます
+・納期は必ず守ります
+
+ご検討のほど、よろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>箇条書きのプロフィールだけ。「何の案件か」に一切触れていない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「情報整理が得意」「柔軟に対応」「納期を守る」→応募者全員が書いている言葉で差がつかない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>実績に数字がゼロ。何年やったのか・どんな規模かがわからない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオなし。「良い人そう」で終わり、採用する根拠がない</span></div>
+        </div>
+        <p class="think-prompt">👉 この文章を100人が送ってきたら、あなたを選ぶ理由はどこにありますか？</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。商品紹介・販促スライドの制作募集を拝見し、ご連絡しました。
+
+食品メーカーで3年間、商品カタログや売り場提案資料の制作を担当してきました。商品の魅力を「手に取りたくなる」見せ方に整えることが得意で、バイヤー向け提案に使った資料が社内で「これを使いたい」と他部署からも声がかかったことがあります。
+
+こちらの案件のような、商品の魅力を伝えるビジュアル資料で特にお役に立てます。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>3年・カタログ・売り場提案など、この人だけが言える具体的な実績に変えた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「他部署からも声がかかった」でエピソードの信頼感が上がった</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「この案件のここで役立つ」と言い切り、ポートフォリオを添えた</span></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
-  図解デザイナー講座 &nbsp;|&nbsp; 勉強会資料 &nbsp;|&nbsp; Part 01 — 詐欺案件の地図
-  <div style="margin-top:1rem; display:flex; justify-content:center; gap:1.5rem;">
-    <a href="part2.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">→ Part 02: 応募文ワーク</a>
-    <a href="part3.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">→ おまけ: 料金設計</a>
+<section>
+  <div class="section-num reveal">Section 03</div>
+  <h2 class="section-title reveal">選ばれる応募文の「型」</h2>
+  <hr class="divider reveal">
+  <div class="principle-box reveal">
+    <div class="principle-top">
+      <div class="principle-lead">The Formula</div>
+      <div class="principle-text">「自分のアピール」ではなく、<br><em>「このクライアントの悩みを、私はこう解決できます」</em></div>
+    </div>
+    <div class="principle-body">
+      <div class="principle-item">
+        <span class="principle-icon">①</span>
+        <div><div class="principle-item-title">冒頭に「何の案件か」を1行入れる</div><div class="principle-item-text">「〇〇の募集を拝見しました」の1行があるだけで、「ちゃんと読んでくれた」という印象が決まります。何の案件かわからない応募文は、そこで止まります。</div></div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">②</span>
+        <div><div class="principle-item-title">経験を「年数・件数・種類」で書く</div><div class="principle-item-text">「資料を作ってきました」より「4年間・提案書と研修スライドを担当」のほうが、一発で伝わります。数字は信頼の最短ルートです。</div></div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">③</span>
+        <div><div class="principle-item-title">「自分にしか言えないエピソード」を1つ入れる</div><div class="principle-item-text">「〜と言っていただくことが多いです」「〜を担当した経験があります」のような一言が、同じような経歴の中で選ばれる理由になります。</div></div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">④</span>
+        <div><div class="principle-item-title">「お役に立てます」と言い切って、ポートフォリオ</div><div class="principle-item-text">自信を持って言い切ること。そしてポートフォリオは言われなくても必ず入れます。クライアントが「採用する」と決めるには判断材料が必要です。</div></div>
+      </div>
+    </div>
   </div>
+  <div class="quote-block reveal" style="margin-top:2rem;">
+    うらやましいくらいの実績がある人でも、<br>
+    「誰でも言えること」しか書いていなければ、選ばれる理由はどこにもありません。<br>
+    あなたにしか言えないことを、ちゃんと出してください。
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 04</div>
+  <h2 class="section-title reveal">「書けることが何もない…」は本当ですか？</h2>
+  <p class="section-desc reveal">企業勤めの経験がなくても、専業主婦でも、実務ゼロでも。状況別に考えてみます。</p>
+  <hr class="divider reveal">
+
+  <div class="qa-grid reveal">
+    <div class="qa-card">
+      <div class="qa-head"><span class="qa-badge">Situation 01</span><div class="qa-q">専業主婦で、すごい企業に勤めた経験もない。アピールできることがない気がする…</div></div>
+      <div class="qa-body">
+        <div class="qa-point"><span class="qa-icon">→</span><span>「専業主婦です」は<strong>書かなくていい</strong>。クライアントにとって不要な情報です。書かなければ、そもそも判断材料にされません。</span></div>
+        <div class="qa-point"><span class="qa-icon">→</span><span>「企業に勤めた経験がない」だけで、<strong>スキルがないわけではない</strong>。日常の経験を案件の言葉に変換できれば、立派な根拠になります。</span></div>
+        <table class="skill-table">
+          <thead><tr><th>日常の経験</th><th>応募文で使える言葉</th></tr></thead>
+          <tbody>
+            <tr><td>PTA・地域の役員で資料作り</td><td>「コミュニティ向けの資料作成経験があります」</td></tr>
+            <tr><td>家計管理・家族のスケジュール調整</td><td>「数字やスケジュールを整理することが得意です」</td></tr>
+            <tr><td>子育てのSNS投稿・記録</td><td>「発信用のビジュアルコンテンツを日常的に作っています」</td></tr>
+            <tr><td>習い事・保育園の連絡調整</td><td>「複数の相手とのやり取りを同時進行で管理してきました」</td></tr>
+          </tbody>
+        </table>
+        <div class="qa-point"><span class="qa-icon">→</span><span>「経験がない」のではなく、<strong>案件につながる言葉に翻訳できていないだけ</strong>のことが多いです。</span></div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-head"><span class="qa-badge">Situation 02</span><div class="qa-q">実務経験がゼロで、講座の課題しかやっていない。それでも応募していいの？</div></div>
+      <div class="qa-body">
+        <div class="qa-point"><span class="qa-icon">→</span><span>「実務未経験です。」で止めず、<strong>講座内で何本作ったかを数字で書く</strong>。数字があると、「経験ゼロ」から抜け出せます。</span></div>
+        <div class="qa-compare">
+          <div class="qa-compare-box bad"><div class="qa-compare-label bad">❌ NG</div>現在講座で勉強中です。実務はこれからですが、頑張ります。</div>
+          <div class="qa-compare-box good"><div class="qa-compare-label good">✓ 改善後</div>スライド・図解制作に集中して取り組んでおり、課題・自主制作合わせて◯本の制作実績があります。確認を重ねながら丁寧に仕上げることを大切にしています。</div>
+        </div>
+        <div class="qa-point"><span class="qa-icon">→</span><span>ポートフォリオも同じ。<strong>課題作品・自主制作でも案件に近いものを1枚添付</strong>すれば、判断材料を渡せます。「免許証を見せないドライバーに仕事を頼む人はいない」のと同じです。</span></div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-head"><span class="qa-badge">Situation 03</span><div class="qa-q">子どもがいて急な対応が難しい。正直に書いておいた方が親切な気がする…</div></div>
+      <div class="qa-body">
+        <div class="qa-point"><span class="qa-icon">→</span><span>「リスクだけ」を渡してもクライアントの不安が増えるだけ。<strong>「どうコントロールしているか」をセットで書く</strong>のが正解です。</span></div>
+        <div class="qa-compare">
+          <div class="qa-compare-box bad"><div class="qa-compare-label bad">❌ NG</div>小さな子どもがいるため、急な体調不良でご迷惑をおかけするかもしれません。</div>
+          <div class="qa-compare-box good"><div class="qa-compare-label good">✓ 改善後</div>お問い合わせには◯時間以内にご返信いたします。また、事前にスケジュールを共有しながら進めますので、納期管理はお任せください。</div>
+        </div>
+        <div class="qa-point"><span class="qa-icon">→</span><span>「できないこと」より<strong>「どう動くか」を具体的に示す</strong>方が、安心感につながります。返信時間のコミットメントと事前スケジュール共有は、クライアントが一番喜ぶ一言です。</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal" style="margin-top:2rem;">
+    「初めてかどうか」「専業主婦かどうか」は、クライアントにはほとんど関係がない。<br>
+    クライアントが知りたいのは、ただ一つ。<strong>「この人に頼んで、大丈夫か」</strong>。
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 05</div>
+  <h2 class="section-title reveal">このパートのまとめ</h2>
+  <hr class="divider reveal">
+  <div class="summary-box reveal">
+    <div class="summary-top"><p>Key Takeaways</p><h3>今日から変えられる3つのこと</h3></div>
+    <div class="summary-items">
+      <div class="summary-item"><span class="summary-num">01</span><div class="summary-text"><strong>「未経験ですが」は絶対に書かない</strong><span>即戦力を求めているクライアントに、この一言は致命的。実績と経験年数で語れば、書く必要がない。</span></div></div>
+      <div class="summary-item"><span class="summary-num">02</span><div class="summary-text"><strong>実績は「数字＋エピソード」で書く</strong><span>「〜が得意です」より「5年担当・〜と言っていただいたことが多い」。誰でも言える言葉ではなく、あなただけが言える言葉を探す。</span></div></div>
+      <div class="summary-item"><span class="summary-num">03</span><div class="summary-text"><strong>「私の自己PR」より「クライアントへの貢献」</strong><span>「私はこういう人です」より「この案件のここで役に立てます」。視点を相手に向けるだけで、応募文は別物になる。</span></div></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#part2 -->
+
+<!-- ══════════════════════════════════════════
+     PART 03 — おまけ：料金設計
+═══════════════════════════════════════════ -->
+<div id="part3">
+
+<div class="part-divider">
+  <div class="part-divider-line"></div>
+  <div class="part-divider-label">◆ おまけ — 料金設計</div>
+  <div class="part-divider-line"></div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">◆ おまけ — 料金設計</div>
+    <h1 class="hero-title">
+      料金設定に、<em>正解はありません。</em><br>
+      だから、こう考える。
+    </h1>
+    <p class="hero-sub">
+      「いくらにすればいい？」「安すぎる？高すぎる？」<br>
+      その悩み、ほぼ全員が通る道です。今日は「正解」ではなく「最初の動き方」を渡します。
+    </p>
+  </div>
+</div>
+
+<section>
+  <div class="section-num reveal">Section 01</div>
+  <h2 class="section-title reveal">みんなが悩むこと</h2>
+  <hr class="divider reveal">
+  <div class="worry-grid reveal">
+    <div class="worry-card"><span class="worry-mark">—</span><span>いくらに設定すればいいかわからない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>安すぎると思われたくない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>予算を書いてと言われたとき、何て答えるの？</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>他の人と比べて高い？安い？</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>値上げのタイミングがわからない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>相場はあるの？</span></div>
+  </div>
+  <div class="truth-box reveal">
+    <div class="truth-top">
+      <div class="truth-lead">The Reality</div>
+      <div class="truth-text">料金設定に「正解」はない。<br><em>正解は、試してから見えてくる。</em></div>
+    </div>
+    <div class="truth-body">
+      <div class="truth-item"><span>→</span><span>「どうしたらいいですか？」と聞いても、明確な答えは誰も持っていません。<strong>相場感は、実際に案件をこなして初めてわかるもの</strong>だからです。</span></div>
+      <div class="truth-item"><span>→</span><span>市場の価格は、出してみて反応を見て決まります。<strong>反応が薄ければ下げる。依頼が増えすぎたら上げる。</strong>それだけです。</span></div>
+      <div class="truth-item"><span>→</span><span>だから今日渡したいのは「正解の価格」ではなく、<strong>「ごちゃごちゃ考えずに動き出すための最初の一手」</strong>です。</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 02</div>
+  <h2 class="section-title reveal">スタートは<em>1枚500円</em>から</h2>
+  <p class="section-desc reveal">「安く売れ」ということではありません。「まず動き出すための初期装備」です。</p>
+  <hr class="divider reveal">
+  <div class="quote-block reveal">
+    1枚500円の意図は、やらないとわからない。<br>
+    価格は何でもいい。みんなが<strong>動き出せればOK</strong>。
+  </div>
+  <div class="truth-box reveal" style="margin-top:1.5rem;">
+    <div class="truth-top">
+      <div class="truth-lead">駆け出し価格とは</div>
+      <div class="truth-text">経験を積むために、<em>意図的に設定する価格</em>のこと。</div>
+    </div>
+    <div class="truth-body">
+      <div class="truth-item"><span>→</span><span><strong>クラウドワークスは「経験を買う場所」</strong>だと考えてください。最初に500円で受けた案件は、単に500円を稼いだのではなく、「次の案件を取るための実績と経験」に変わります。</span></div>
+      <div class="truth-item"><span>→</span><span>500円でやってみないと、何がわかるかもわかりません。<strong>1回チャレンジすることに価値があります。</strong>考え方が伝われば、あとは自分で動き出せます。</span></div>
+      <div class="truth-item"><span>→</span><span>クラウドワークスで経験を積んでいる間は、<strong>それだけで他の人より圧倒的に前に進んでいます。</strong>コツコツ続けている人は、周りが消えていくので自然とお仕事が集まってくるようになります。</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 03</div>
+  <h2 class="section-title reveal">価格が上がっていく<em>3つのステップ</em></h2>
+  <p class="section-desc reveal">「あなたは今ここ。次にこの価格帯に行くには、これをゲットしてください」が見えると安心できます。</p>
+  <hr class="divider reveal">
+  <div class="price-steps reveal">
+    <div class="price-step">
+      <div class="step-left"><span class="step-num">Step 01</span><div class="step-badge"><span class="price">500円〜</span><span class="price-sub">1枚あたり</span></div></div>
+      <div class="step-right">
+        <div class="step-title">動き出す。経験を積む。</div>
+        <div class="step-desc">最初の3案件が目標です。この段階ではとにかく「1回やってみる」ことが最優先。価格よりも、案件の流れ・クライアントとのやり取り・納品までを一通り経験することに価値があります。</div>
+        <span class="step-tag">目標: まず3案件</span>
+      </div>
+    </div>
+    <div class="price-step">
+      <div class="step-left"><span class="step-num">Step 02</span><div class="step-badge"><span class="price">800〜1,500円</span><span class="price-sub">1枚あたり</span></div></div>
+      <div class="step-right">
+        <div class="step-title">ポートフォリオが育ってきたら上げる</div>
+        <div class="step-desc">実績が積まれ、ポートフォリオに見せられる作品が増えてきたタイミングで値上げを検討します。「図解スライド」と「文字スライド」では難易度が違うので、種類ごとに価格を分けて設定するのも効果的です。</div>
+        <span class="step-tag">目安: ポートフォリオ10本〜</span>
+      </div>
+    </div>
+    <div class="price-step">
+      <div class="step-left"><span class="step-num">Step 03</span><div class="step-badge"><span class="price">プロジェクト</span><span class="price-sub">案件単位</span></div></div>
+      <div class="step-right">
+        <div class="step-title">SNSから問い合わせが来るようになったら</div>
+        <div class="step-desc">「1枚いくら」ではなく「このプロジェクト全体でいくら」という見せ方に変わっていきます。SNSやX経由で問い合わせが来るようになるまで、早くて半年、平均1年くらいが目安です。</div>
+        <span class="step-tag">目安: SNS発信から半年〜1年</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 04</div>
+  <h2 class="section-title reveal">「予算を教えてください」と<em>言われたら</em></h2>
+  <hr class="divider reveal">
+  <div class="estimate-grid reveal">
+    <div class="estimate-card"><div class="estimate-label q">Q — よくある状況</div><div class="estimate-q">「応募時に予算を記入してください」と言われた。ポートフォリオの価格で出していいの？</div></div>
+    <div class="estimate-card"><div class="estimate-label a">A — 答え方</div><div class="estimate-a"><strong>ポートフォリオに載せている価格で出してOKです。</strong>1回出してみて、反応を見てください。失敗しながら相場感を掴んでいきます。</div></div>
+    <div class="estimate-card"><div class="estimate-label q">Q — よくある状況</div><div class="estimate-q">「何枚で何円ですか？」と聞かれたけど、枚数が確定していない…</div></div>
+    <div class="estimate-card"><div class="estimate-label a">A — 答え方</div><div class="estimate-a">枚数は案件が進まないと確定しません。<strong>「20枚程度でしたら◯円〜◯円ほどです」という幅で伝えてください。</strong>パッケージ例を用意しておくと答えやすくなります。</div></div>
+    <div class="estimate-card"><div class="estimate-label q">Q — よくある状況</div><div class="estimate-q">「高い」と言われた。やっぱり下げた方がいい？</div></div>
+    <div class="estimate-card"><div class="estimate-label a">A — 答え方</div><div class="estimate-a">1万円でも高いと言う人は言います。<strong>「高い」と言う人は最初からターゲットではない</strong>と割り切ってOK。ただ複数回言われるなら、価格か案件選びを見直すサインです。</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 05</div>
+  <h2 class="section-title reveal">持っておきたい<em>4つの考え方</em></h2>
+  <hr class="divider reveal">
+  <div class="mindset-grid reveal">
+    <div class="mindset-card"><div class="mindset-icon">🪜</div><div class="mindset-title">価格は「今」じゃなく「次」に上げればいい</div><div class="mindset-text">最初の価格が永遠に続くわけではありません。実績が積まれたら上げる。それだけです。最初から高単価を目指して動けなくなるより、500円で動き出した人の方が結果的に前に進みます。</div></div>
+    <div class="mindset-card"><div class="mindset-icon">📊</div><div class="mindset-title">需要と供給で決まる</div><div class="mindset-text">依頼が多すぎたら上げる。来なくなったら下げる。これが市場の仕組みです。自分の価格が「適切か」は、出してみないとわかりません。まず試すことが唯一の答えです。</div></div>
+    <div class="mindset-card"><div class="mindset-icon">🏪</div><div class="mindset-title">クラウドワークスは「経験を買う場所」</div><div class="mindset-text">最初のステージです。ここで安売りしているのではなく、次のステージに進むための経験値を積んでいる。そのマインドセットで取り組むと、1案件1案件の意味が変わります。</div></div>
+    <div class="mindset-card"><div class="mindset-icon">⏳</div><div class="mindset-title">料金表が「見られる」まで時間がかかる</div><div class="mindset-text">クライアントが本気で頼もうとした時しか料金表を見ません。SNSから問い合わせが来るようになるまで平均1年。それまでの経験が土台になります。焦らず続けることが一番の近道です。</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-num reveal">Section 06</div>
+  <h2 class="section-title reveal">このパートのまとめ</h2>
+  <hr class="divider reveal">
+  <div class="summary-box reveal">
+    <div class="summary-top"><p>Key Takeaways</p><h3>今日から動けるための3つのこと</h3></div>
+    <div class="summary-items">
+      <div class="summary-item"><span class="summary-num">01</span><div class="summary-text"><strong>まず1枚500円で動き出す</strong><span>正解の価格を探すより、1案件こなす方が100倍早く相場感がつかめます。考えすぎず、出してみてください。</span></div></div>
+      <div class="summary-item"><span class="summary-num">02</span><div class="summary-text"><strong>「高い」と言われたら、その人はターゲットではない</strong><span>複数回言われるなら案件選びを見直す。1回言われただけなら気にしない。需要と供給を試しているだけです。</span></div></div>
+      <div class="summary-item"><span class="summary-num">03</span><div class="summary-text"><strong>価格より「継続」が最強</strong><span>コツコツやっていると、まわりが自然と消えていきます。続けた人にお仕事が集まる構造です。</span></div></div>
+    </div>
+  </div>
+  <div class="quote-block reveal" style="margin-top:2rem;">
+    ごちゃごちゃ考えずに済むようにしたい。<br>
+    価格は何でもいい。<strong>みんなが動き出せればOK。</strong>
+  </div>
+</section>
+
+</div><!-- /#part3 -->
+
+<footer>
+  図解デザイナー講座 &nbsp;|&nbsp; 勉強会資料 &nbsp;|&nbsp; 0→1の壁を突破する 案件獲得ワーク
 </footer>
 
 <script>
   // Progress bar
   window.addEventListener('scroll', () => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
-    const pct   = (window.scrollY / total) * 100;
-    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-bar').style.width = (window.scrollY / total * 100) + '%';
   });
 
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
     });
-  }, { threshold: 0.12 });
-
+  }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Warning accordion
-  function toggleWarning(el) {
-    el.classList.toggle('open');
-  }
+  // Part 1: Warning accordion
+  function toggleWarning(el) { el.classList.toggle('open'); }
 
-  // Checklist
-  function toggleCheck(el) {
-    el.classList.toggle('checked');
-    updateResult();
-  }
-
+  // Part 1: Checklist
+  function toggleCheck(el) { el.classList.toggle('checked'); updateResult(); }
   function updateResult() {
-    const items  = document.querySelectorAll('.check-item');
-    const count  = [...items].filter(i => i.classList.contains('checked')).length;
+    const items = document.querySelectorAll('.check-item');
+    const count = [...items].filter(i => i.classList.contains('checked')).length;
     document.getElementById('count').textContent = count;
-
     const rd = document.getElementById('result-danger');
     const rc = document.getElementById('result-caution');
     const rs = document.getElementById('result-safe');
-
-    rd.className = 'checklist-result';
-    rc.className = 'checklist-result';
-    rs.className = 'checklist-result';
-
+    rd.className = rc.className = rs.className = 'checklist-result';
     if      (count >= 3) rd.className = 'checklist-result result-danger';
     else if (count >= 1) rc.className = 'checklist-result result-caution';
     else                 rs.className = 'checklist-result result-safe';
+  }
+
+  // Part 2: Before/After toggle
+  function toggleAfter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.textContent = box.classList.contains('open') ? '▼ 閉じる' : '▶ 改善後を見る';
   }
 </script>
 </body>
