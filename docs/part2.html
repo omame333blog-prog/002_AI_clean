@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>応募文ワーク | 図解デザイナー講座</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:        #f0edea;
+    --bg2:       #e8e4e0;
+    --bg3:       #dedad5;
+    --border:    rgba(0,0,0,0.08);
+    --amber:     #c8860a;
+    --amber-dim: rgba(200,134,10,0.1);
+    --red:       #c04040;
+    --red-dim:   rgba(192,64,64,0.08);
+    --green:     #2e9469;
+    --green-dim: rgba(46,148,105,0.08);
+    --cream:     #1c1814;
+    --text:      #3a3530;
+    --text-dim:  rgba(58,53,48,0.5);
+    --serif:     'Noto Serif JP', serif;
+    --sans:      'Noto Sans JP', sans-serif;
+    --mono:      'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--amber), var(--green));
+    z-index: 100; transition: width 0.1s linear;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+    padding: 1rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    background: linear-gradient(to bottom, rgba(240,237,234,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+  }
+  nav .label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
+  }
+  nav .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 80vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 50% 50% at 75% 30%, rgba(46,148,105,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 15% 70%, rgba(200,134,10,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 800px; margin: 0 auto; width: 100%; position: relative; }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--green); text-transform: uppercase;
+    border: 1px solid rgba(46,148,105,0.3);
+    padding: 0.35rem 0.75rem; border-radius: 2px; margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+  .hero-title {
+    font-family: var(--serif); font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900; line-height: 1.35; color: var(--cream); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+  .hero-title em { font-style: normal; color: var(--green); }
+
+  .hero-axis {
+    display: flex; gap: 0; margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.6s ease forwards;
+  }
+  .axis-box {
+    flex: 1; padding: 1.1rem 1.25rem; font-size: 0.85rem;
+    line-height: 1.6; border: 1px solid var(--border);
+  }
+  .axis-box:first-child {
+    background: var(--red-dim); border-color: rgba(192,64,64,0.15);
+    border-radius: 6px 0 0 6px;
+  }
+  .axis-box:last-child {
+    background: var(--green-dim); border-color: rgba(46,148,105,0.15);
+    border-radius: 0 6px 6px 0;
+  }
+  .axis-label {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 0.4rem; display: block;
+  }
+  .axis-box:first-child .axis-label { color: var(--red); }
+  .axis-box:last-child .axis-label { color: var(--green); }
+  .axis-box strong { display: block; font-family: var(--serif); font-size: 0.92rem; color: var(--cream); }
+
+  .axis-arrow {
+    width: 40px; display: flex; align-items: center; justify-content: center;
+    background: #fff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    color: var(--text-dim); font-size: 0.8rem; flex-shrink: 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section { max-width: 800px; margin: 0 auto; padding: 5rem 2rem; }
+
+  .section-num {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.2em; color: var(--green);
+    text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-weight: 700; color: var(--cream); line-height: 1.4; margin-bottom: 0.5rem;
+  }
+  .section-desc { font-size: 0.9rem; color: var(--text-dim); margin-bottom: 2.5rem; }
+  .divider { width: 40px; height: 2px; background: var(--green); margin: 1.25rem 0 2.5rem; border: none; }
+
+  /* ── FLOW ── */
+  .flow-steps { display: flex; flex-direction: column; gap: 0; position: relative; }
+  .flow-steps::before {
+    content: ''; position: absolute; left: 19px; top: 20px; bottom: 20px;
+    width: 2px; background: linear-gradient(to bottom, var(--green), rgba(46,148,105,0.1));
+  }
+  .flow-step { display: flex; align-items: flex-start; gap: 1.25rem; padding: 0.75rem 0; position: relative; }
+  .flow-circle {
+    width: 40px; height: 40px; border-radius: 50%; background: #fff;
+    border: 2px solid var(--green); display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 0.75rem; font-weight: 500;
+    color: var(--green); flex-shrink: 0; z-index: 1;
+  }
+  .flow-content { padding: 0.6rem 0; }
+  .flow-label { font-family: var(--serif); font-weight: 700; font-size: 0.95rem; color: var(--cream); margin-bottom: 0.2rem; }
+  .flow-note { font-size: 0.8rem; color: var(--text-dim); }
+  .flow-work {
+    background: rgba(46,148,105,0.08); border: 1px solid rgba(46,148,105,0.2);
+    border-radius: 4px; padding: 0.3rem 0.6rem; font-size: 0.72rem; color: var(--green);
+    font-family: var(--mono); letter-spacing: 0.08em; display: inline-block; margin-top: 0.3rem;
+  }
+
+  /* ── EXAMPLES ── */
+  .examples-grid { display: flex; flex-direction: column; gap: 1.75rem; }
+
+  .example-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .example-head {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.9rem 1.25rem; background: var(--bg); border-bottom: 1px solid var(--border);
+  }
+  .example-type {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    color: var(--red); text-transform: uppercase;
+    background: var(--red-dim); border: 1px solid rgba(192,64,64,0.15);
+    padding: 0.2rem 0.5rem; border-radius: 2px;
+  }
+  .example-title { font-size: 0.85rem; font-weight: 700; color: var(--cream); }
+
+  .example-body { padding: 1.25rem; }
+
+  .message-bubble {
+    background: #f5f3f0; border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 8px; padding: 1rem 1.1rem; font-size: 0.88rem;
+    color: var(--text); line-height: 1.9; white-space: pre-wrap;
+    font-family: var(--sans); margin-bottom: 1rem;
+  }
+  .message-bubble.after {
+    background: rgba(46,148,105,0.05); border-color: rgba(46,148,105,0.2);
+  }
+
+  /* NG points inline */
+  .ng-points { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .ng-point {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    font-size: 0.82rem; color: var(--text-dim); line-height: 1.6;
+  }
+  .ng-point .mark { color: var(--red); flex-shrink: 0; font-size: 0.75rem; margin-top: 3px; }
+
+  .think-prompt { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 0.75rem; font-style: italic; }
+
+  .reveal-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: none; border: 1.5px solid var(--green); color: var(--green);
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.45rem 0.9rem; border-radius: 3px;
+    cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .reveal-btn:hover { background: var(--green); color: #fff; }
+
+  .after-box { display: none; margin-top: 1.1rem; border-top: 1px dashed rgba(46,148,105,0.3); padding-top: 1.1rem; }
+  .after-box.open { display: block; }
+  .after-label {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em;
+    color: var(--green); text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .after-points { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+  .after-point { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
+  .after-point .mark { color: var(--green); flex-shrink: 0; }
+
+  /* ── PRINCIPLE BOX ── */
+  .principle-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .principle-top {
+    background: linear-gradient(135deg, rgba(46,148,105,0.08), rgba(200,134,10,0.05));
+    padding: 2rem 2rem 1.5rem; border-bottom: 1px solid var(--border);
+  }
+  .principle-lead {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .principle-text {
+    font-family: var(--serif); font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 700; color: var(--cream); line-height: 1.6;
+  }
+  .principle-text em { font-style: normal; color: var(--green); }
+
+  .principle-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .principle-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .principle-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+  .principle-item-title { font-family: var(--serif); font-weight: 700; font-size: 0.92rem; color: var(--cream); margin-bottom: 0.2rem; }
+  .principle-item-text { font-size: 0.82rem; color: var(--text-dim); line-height: 1.65; }
+
+  /* ── SUMMARY ── */
+  .summary-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .summary-top {
+    background: linear-gradient(135deg, rgba(46,148,105,0.07), rgba(200,134,10,0.05));
+    padding: 1.5rem; border-bottom: 1px solid var(--border); text-align: center;
+  }
+  .summary-top p {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .summary-top h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--cream); }
+  .summary-items { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+  .summary-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .summary-num {
+    font-family: var(--mono); font-size: 1.5rem; font-weight: 500;
+    color: var(--green); flex-shrink: 0; line-height: 1; padding-top: 4px;
+  }
+  .summary-text strong { display: block; font-family: var(--serif); font-size: 0.95rem; color: var(--cream); margin-bottom: 0.2rem; }
+  .summary-text span { font-size: 0.82rem; color: var(--text-dim); }
+
+  /* ── Q&A CARDS ── */
+  .qa-grid { display: flex; flex-direction: column; gap: 1.25rem; }
+  .qa-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .qa-head {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    background: rgba(200,134,10,0.04);
+  }
+  .qa-badge {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em;
+    background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(200,134,10,0.25);
+    padding: 0.25rem 0.5rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    text-transform: uppercase;
+  }
+  .qa-q { font-family: var(--serif); font-size: 0.95rem; font-weight: 700; color: var(--cream); line-height: 1.55; }
+  .qa-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+  .qa-point {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.85rem; color: var(--text); line-height: 1.65;
+  }
+  .qa-icon { font-size: 0.95rem; flex-shrink: 0; margin-top: 2px; }
+  .qa-point strong { color: var(--cream); font-family: var(--serif); }
+  .skill-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 0.5rem; }
+  .skill-table th {
+    background: var(--bg2); color: var(--text-dim); font-family: var(--mono);
+    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.45rem 0.75rem; text-align: left; border: 1px solid var(--bg3);
+  }
+  .skill-table td { padding: 0.55rem 0.75rem; border: 1px solid var(--bg3); vertical-align: top; line-height: 1.5; }
+  .skill-table td:first-child { color: var(--text-dim); }
+  .skill-table td:last-child { color: var(--cream); font-weight: 500; }
+  .qa-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.25rem; }
+  .qa-compare-box { padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.82rem; line-height: 1.6; }
+  .qa-compare-box.bad { background: var(--red-dim); border: 1px solid rgba(192,64,64,0.15); color: var(--text-dim); }
+  .qa-compare-box.good { background: var(--green-dim); border: 1px solid rgba(46,148,105,0.15); color: var(--text); }
+  .qa-compare-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .qa-compare-label.bad { color: var(--red); }
+  .qa-compare-label.good { color: var(--green); }
+  @media (max-width: 600px) { .qa-compare { grid-template-columns: 1fr; } }
+
+  /* ── QUOTE ── */
+  .quote-block {
+    border-left: 3px solid var(--green); padding: 0.75rem 1.25rem;
+    background: var(--green-dim); border-radius: 0 6px 6px 0;
+    font-family: var(--serif); font-size: 0.95rem; color: var(--cream);
+    line-height: 1.7; margin: 1.5rem 0;
+  }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 2.5rem 2rem;
+    text-align: center; font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase;
+  }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+
+  @media (max-width: 600px) {
+    .hero-axis { flex-direction: column; }
+    .axis-box:first-child { border-radius: 6px 6px 0 0; }
+    .axis-box:last-child { border-radius: 0 0 6px 6px; }
+    .axis-arrow { width: 100%; height: 32px; border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .hero-title { font-size: 1.7rem; }
+    section { padding: 3.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<nav>
+  <div class="dot"></div>
+  <span class="label">図解デザイナー講座 / 勉強会資料</span>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">◆ Part 02 — 応募文ワーク</div>
+    <h1 class="hero-title">
+      応募文は、<em>丁寧さをアピール</em><br>する場所じゃない。
+    </h1>
+
+    <div class="hero-axis">
+      <div class="axis-box">
+        <span class="axis-label">❌ よくある勘違い</span>
+        <strong>どれだけ丁寧に書けているかを見せる場所</strong>
+      </div>
+      <div class="axis-arrow">→</div>
+      <div class="axis-box">
+        <span class="axis-label">✓ 本当の役割</span>
+        <strong>相手が「採用するかどうか」を判断しやすくする場所</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 01: 流れ ── -->
+<section>
+  <div class="section-num reveal">Section 01</div>
+  <h2 class="section-title reveal">今日のワークの流れ</h2>
+  <p class="section-desc reveal">正解を出すワークじゃありません。「なんか引っかかる」と感じることが目的です。</p>
+  <hr class="divider reveal">
+
+  <div class="flow-steps reveal">
+    <div class="flow-step">
+      <div class="flow-circle">01</div>
+      <div class="flow-content">
+        <div class="flow-label">ダメな応募文を読む</div>
+        <div class="flow-note">クライアントとして受け取ったつもりで読む</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">02</div>
+      <div class="flow-content">
+        <div class="flow-label">「気になるところ」をメモする</div>
+        <div class="flow-note">どこが引っかかるか、何が足りないか</div>
+        <span class="flow-work">⏱ 2〜3分のワーク</span>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">03</div>
+      <div class="flow-content">
+        <div class="flow-label">おまめ解説</div>
+        <div class="flow-note">なぜ採用されないのか、何がネックだったのか</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-circle">04</div>
+      <div class="flow-content">
+        <div class="flow-label">改善後を並べて確認</div>
+        <div class="flow-note">Before / After を見比べる</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 02: ダメ応募文 ── -->
+<section>
+  <div class="section-num reveal">Section 02</div>
+  <h2 class="section-title reveal">あなたがクライアントなら、採用しますか？</h2>
+  <p class="section-desc reveal">以下の応募文を「受け取る側」として読んでみてください。</p>
+  <hr class="divider reveal">
+
+  <div class="examples-grid">
+
+    <!-- A: 「私を見てください」型 -->
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern A</span>
+        <span class="example-title">「私を見てください」型 ― 自己PRに終始している</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募させていただきます。
+
+私はIT企業で人事・採用を6年担当しており、社内研修資料や採用説明会のスライドを数多く作成してきました。デザインにはずっと興味があり、最近Canvaも勉強しています。
+
+ママ向けのお仕事が特に得意です。また、AIツールも積極的に活用しており、効率よく進められます。
+
+テスト制作のあと、単価についても相談させていただけますでしょうか。
+
+どうぞよろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>「私はこういう人です」という自己紹介に終始。クライアントの悩みへの言及がゼロ</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「ママ向けが得意」→ママ向けかどうか不明な案件に書くと的外れになる</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>テスト前に単価交渉を持ち出している。まずは採用してもらうことに集中する</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオが添付されていない</span></div>
+        </div>
+        <p class="think-prompt">👉 クライアントは「この人に頼んだら、自分の悩みが解決できそう」と思えますか？</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。図解・一覧スライドの制作募集を拝見し、ご連絡しました。
+
+IT企業で人事・採用を6年担当し、研修資料や採用説明会スライドを社内向けに多数制作してきました。情報量が多い内容をシンプルに整理することが得意で、「パッと見てわかる」「説明しやすくなった」と言っていただくことが多いです。
+
+こちらの案件の「視認性を高めたい」というご要望にも、その強みでお役に立てると考えています。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>冒頭に「何の案件に応募しているか」を入れた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>経験年数を数字で書いて、実績の重みを一発で伝えた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「この案件のここで役に立てる」とつなげてから、言い切った</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: 「未経験ですが」型 -->
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern B</span>
+        <span class="example-title">「未経験ですが」型 ― これを書いた時点でほぼ終わり</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募いたします。
+
+フリーランスとしては未経験ですが、保険会社で契約書類や説明資料の作成を担当してきました。AIも使えますし、Canvaも扱えます。
+
+ご依頼いただければ、誠心誠意対応させていただきます。どうぞよろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>「フリーランスとしては未経験ですが」→この一言で即戦力感がゼロになる。絶対に書かない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「説明資料の作成を担当」→何年？どんな規模？数字がないと伝わらない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「AIも使えます」→どんな業務で？具体性がなければ書いても印象に残らない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオが添付されていない。判断する材料が何もない</span></div>
+        </div>
+        <p class="think-prompt">👉 「未経験」という言葉を入れる必要は本当にありますか？実績で語ればいい。</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。保険・金融向け説明スライドの制作募集を拝見し、ご連絡しました。
+
+保険会社で4年間、契約者向けの説明資料や社内研修スライドの作成を担当してきました。専門用語が多い内容をわかりやすく整理することが得意で、「お客様に説明しやすくなった」と支社内で言っていただいた経験があります。Canvaは業務でも日常的に使っています。
+
+こちらの案件のような、複雑な情報をわかりやすく伝えるスライド制作で特にお役に立てます。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>「未経験ですが」を外し、実務年数で実績を示した</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「支社内で言っていただいた」など、この人にしか言えないエピソードを入れた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>ポートフォリオを添付して、判断できる状態を作った</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: 「誰でも言える」型 -->
+    <div class="example-card reveal">
+      <div class="example-head">
+        <span class="example-type">NG Pattern C</span>
+        <span class="example-title">「誰でも言える」型 ― 選ばれる理由がどこにもない</span>
+      </div>
+      <div class="example-body">
+        <div class="message-bubble">はじめまして。こちらの案件に応募させていただきます。
+
+■ 経歴
+・食品メーカーで企画・事務を経験
+・AIを活用した業務効率化が得意
+・Canva、PowerPoint使用可能
+
+■ 強み
+・情報整理が得意です
+・柔軟に対応できます
+・納期は必ず守ります
+
+ご検討のほど、よろしくお願いいたします。</div>
+        <div class="ng-points">
+          <div class="ng-point"><span class="mark">✗</span><span>箇条書きのプロフィールだけ。「何の案件か」に一切触れていない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>「情報整理が得意」「柔軟に対応」「納期を守る」→応募者全員が書いている言葉で差がつかない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>実績に数字がゼロ。何年やったのか・どんな規模かがわからない</span></div>
+          <div class="ng-point"><span class="mark">✗</span><span>ポートフォリオなし。「良い人そう」で終わり、採用する根拠がない</span></div>
+        </div>
+        <p class="think-prompt">👉 この文章を100人が送ってきたら、あなたを選ぶ理由はどこにありますか？</p>
+        <button class="reveal-btn" onclick="toggleAfter(this)">▶ 改善後を見る</button>
+        <div class="after-box">
+          <div class="after-label">✦ After — 改善後</div>
+          <div class="message-bubble after">はじめまして。商品紹介・販促スライドの制作募集を拝見し、ご連絡しました。
+
+食品メーカーで3年間、商品カタログや売り場提案資料の制作を担当してきました。商品の魅力を「手に取りたくなる」見せ方に整えることが得意で、バイヤー向け提案に使った資料が社内で「これを使いたい」と他部署からも声がかかったことがあります。
+
+こちらの案件のような、商品の魅力を伝えるビジュアル資料で特にお役に立てます。
+
+ポートフォリオを添付します。[URL]</div>
+          <div class="after-points">
+            <div class="after-point"><span class="mark">✓</span><span>3年・カタログ・売り場提案など、この人だけが言える具体的な実績に変えた</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「他部署からも声がかかった」でエピソードの信頼感が上がった</span></div>
+            <div class="after-point"><span class="mark">✓</span><span>「この案件のここで役立つ」と言い切り、ポートフォリオを添えた</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SECTION 03: 判断軸 ── -->
+<section>
+  <div class="section-num reveal">Section 03</div>
+  <h2 class="section-title reveal">選ばれる応募文の「型」</h2>
+  <hr class="divider reveal">
+
+  <div class="principle-box reveal">
+    <div class="principle-top">
+      <div class="principle-lead">The Formula</div>
+      <div class="principle-text">
+        「自分のアピール」ではなく、<br>
+        <em>「このクライアントの悩みを、私はこう解決できます」</em>
+      </div>
+    </div>
+    <div class="principle-body">
+      <div class="principle-item">
+        <span class="principle-icon">①</span>
+        <div>
+          <div class="principle-item-title">冒頭に「何の案件か」を1行入れる</div>
+          <div class="principle-item-text">「〇〇の募集を拝見しました」の1行があるだけで、「ちゃんと読んでくれた」という印象が決まります。何の案件かわからない応募文は、そこで止まります。</div>
+        </div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">②</span>
+        <div>
+          <div class="principle-item-title">経験を「年数・件数・種類」で書く</div>
+          <div class="principle-item-text">「資料を作ってきました」より「4年間・提案書と研修スライドを担当」のほうが、一発で伝わります。数字は信頼の最短ルートです。</div>
+        </div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">③</span>
+        <div>
+          <div class="principle-item-title">「自分にしか言えないエピソード」を1つ入れる</div>
+          <div class="principle-item-text">「〜と言っていただくことが多いです」「〜を担当した経験があります」のような一言が、同じような経歴の中で選ばれる理由になります。</div>
+        </div>
+      </div>
+      <div class="principle-item">
+        <span class="principle-icon">④</span>
+        <div>
+          <div class="principle-item-title">「お役に立てます」と言い切って、ポートフォリオ</div>
+          <div class="principle-item-text">自信を持って言い切ること。そしてポートフォリオは言われなくても必ず入れます。クライアントが「採用する」と決めるには判断材料が必要です。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal" style="margin-top: 2rem;">
+    うらやましいくらいの実績がある人でも、<br>
+    「誰でも言えること」しか書いていなければ、選ばれる理由はどこにもありません。<br>
+    あなたにしか言えないことを、ちゃんと出してください。
+  </div>
+</section>
+
+<!-- ── SECTION 04: 状況別Q&A ── -->
+<section>
+  <div class="section-num reveal">Section 04</div>
+  <h2 class="section-title reveal">「書けることが何もない…」は本当ですか？</h2>
+  <p class="section-desc reveal">企業勤めの経験がなくても、専業主婦でも、実務ゼロでも。状況別に考えてみます。</p>
+  <hr class="divider reveal">
+
+  <div class="qa-grid reveal">
+
+    <!-- Q1: 専業主婦・企業経験なし -->
+    <div class="qa-card">
+      <div class="qa-head">
+        <span class="qa-badge">Situation 01</span>
+        <div class="qa-q">専業主婦で、すごい企業に勤めた経験もない。アピールできることがない気がする…</div>
+      </div>
+      <div class="qa-body">
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「専業主婦です」は<strong>書かなくていい</strong>。クライアントにとって不要な情報です。書かなければ、そもそも判断材料にされません。</span>
+        </div>
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「企業に勤めた経験がない」だけで、<strong>スキルがないわけではない</strong>。日常の経験を案件の言葉に変換できれば、立派な根拠になります。</span>
+        </div>
+
+        <table class="skill-table">
+          <thead>
+            <tr><th>日常の経験</th><th>応募文で使える言葉</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>PTA・地域の役員で資料作り</td><td>「コミュニティ向けの資料作成経験があります」</td></tr>
+            <tr><td>家計管理・家族のスケジュール調整</td><td>「数字やスケジュールを整理することが得意です」</td></tr>
+            <tr><td>子育てのSNS投稿・記録</td><td>「発信用のビジュアルコンテンツを日常的に作っています」</td></tr>
+            <tr><td>習い事・保育園の連絡調整</td><td>「複数の相手とのやり取りを同時進行で管理してきました」</td></tr>
+          </tbody>
+        </table>
+
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「経験がない」のではなく、<strong>案件につながる言葉に翻訳できていないだけ</strong>のことが多いです。</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2: 実務ゼロ・講座課題だけ -->
+    <div class="qa-card">
+      <div class="qa-head">
+        <span class="qa-badge">Situation 02</span>
+        <div class="qa-q">実務経験がゼロで、講座の課題しかやっていない。それでも応募していいの？</div>
+      </div>
+      <div class="qa-body">
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「実務未経験です。」で止めず、<strong>講座内で何本作ったかを数字で書く</strong>。数字があると、「経験ゼロ」から抜け出せます。</span>
+        </div>
+
+        <div class="qa-compare">
+          <div class="qa-compare-box bad">
+            <div class="qa-compare-label bad">❌ NG</div>
+            現在講座で勉強中です。実務はこれからですが、頑張ります。
+          </div>
+          <div class="qa-compare-box good">
+            <div class="qa-compare-label good">✓ 改善後</div>
+            スライド・図解制作に集中して取り組んでおり、課題・自主制作合わせて◯本の制作実績があります。確認を重ねながら丁寧に仕上げることを大切にしています。
+          </div>
+        </div>
+
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>ポートフォリオも同じ。<strong>課題作品・自主制作でも案件に近いものを1枚添付</strong>すれば、判断材料を渡せます。「免許証を見せないドライバーに仕事を頼む人はいない」のと同じです。</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3: 子育て中・時間が限られる -->
+    <div class="qa-card">
+      <div class="qa-head">
+        <span class="qa-badge">Situation 03</span>
+        <div class="qa-q">子どもがいて急な対応が難しい。正直に書いておいた方が親切な気がする…</div>
+      </div>
+      <div class="qa-body">
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「リスクだけ」を渡してもクライアントの不安が増えるだけ。<strong>「どうコントロールしているか」をセットで書く</strong>のが正解です。</span>
+        </div>
+
+        <div class="qa-compare">
+          <div class="qa-compare-box bad">
+            <div class="qa-compare-label bad">❌ NG</div>
+            小さな子どもがいるため、急な体調不良でご迷惑をおかけするかもしれません。
+          </div>
+          <div class="qa-compare-box good">
+            <div class="qa-compare-label good">✓ 改善後</div>
+            お問い合わせには◯時間以内にご返信いたします。また、事前にスケジュールを共有しながら進めますので、納期管理はお任せください。
+          </div>
+        </div>
+
+        <div class="qa-point">
+          <span class="qa-icon">→</span>
+          <span>「できないこと」より<strong>「どう動くか」を具体的に示す</strong>方が、安心感につながります。返信時間のコミットメントと事前スケジュール共有は、クライアントが一番喜ぶ一言です。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="quote-block reveal" style="margin-top: 2rem;">
+    「初めてかどうか」「専業主婦かどうか」は、クライアントにはほとんど関係がない。<br>
+    クライアントが知りたいのは、ただ一つ。<strong>「この人に頼んで、大丈夫か」</strong>。
+  </div>
+</section>
+
+<!-- ── SECTION 05: まとめ ── -->
+<section>
+  <div class="section-num reveal">Section 05</div>
+  <h2 class="section-title reveal">このパートのまとめ</h2>
+  <hr class="divider reveal">
+
+  <div class="summary-box reveal">
+    <div class="summary-top">
+      <p>Key Takeaways</p>
+      <h3>今日から変えられる3つのこと</h3>
+    </div>
+    <div class="summary-items">
+      <div class="summary-item">
+        <span class="summary-num">01</span>
+        <div class="summary-text">
+          <strong>「未経験ですが」は絶対に書かない</strong>
+          <span>即戦力を求めているクライアントに、この一言は致命的。実績と経験年数で語れば、書く必要がない。</span>
+        </div>
+      </div>
+      <div class="summary-item">
+        <span class="summary-num">02</span>
+        <div class="summary-text">
+          <strong>実績は「数字＋エピソード」で書く</strong>
+          <span>「〜が得意です」より「5年担当・〜と言っていただいたことが多い」。誰でも言える言葉ではなく、あなただけが言える言葉を探す。</span>
+        </div>
+      </div>
+      <div class="summary-item">
+        <span class="summary-num">03</span>
+        <div class="summary-text">
+          <strong>「私の自己PR」より「クライアントへの貢献」</strong>
+          <span>「私はこういう人です」より「この案件のここで役に立てます」。視点を相手に向けるだけで、応募文は別物になる。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  図解デザイナー講座 &nbsp;|&nbsp; 勉強会資料 &nbsp;|&nbsp; Part 02 — 応募文ワーク
+  <div style="margin-top:1rem; display:flex; justify-content:center; gap:1.5rem;">
+    <a href="index.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">← Part 01: 詐欺案件の地図</a>
+    <a href="part3.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">→ おまけ: 料金設計</a>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function toggleAfter(btn) {
+    const box = btn.nextElementSibling;
+    box.classList.toggle('open');
+    btn.textContent = box.classList.contains('open') ? '▼ 閉じる' : '▶ 改善後を見る';
+  }
+</script>
+</body>
+</html>

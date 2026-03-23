@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>料金設計 | 図解デザイナー講座</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:        #f0edea;
+    --bg2:       #e8e4e0;
+    --bg3:       #dedad5;
+    --border:    rgba(0,0,0,0.08);
+    --amber:     #c8860a;
+    --amber-dim: rgba(200,134,10,0.1);
+    --red:       #c04040;
+    --red-dim:   rgba(192,64,64,0.08);
+    --green:     #2e9469;
+    --green-dim: rgba(46,148,105,0.08);
+    --blue:      #2a6db5;
+    --blue-dim:  rgba(42,109,181,0.08);
+    --cream:     #1c1814;
+    --text:      #3a3530;
+    --text-dim:  rgba(58,53,48,0.5);
+    --serif:     'Noto Serif JP', serif;
+    --sans:      'Noto Sans JP', sans-serif;
+    --mono:      'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 2px; width: 0%;
+    background: linear-gradient(90deg, var(--amber), var(--blue));
+    z-index: 100; transition: width 0.1s linear;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 90;
+    padding: 1rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    background: linear-gradient(to bottom, rgba(240,237,234,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+  }
+  nav .label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase;
+  }
+  nav .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--amber); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── LAYOUT ── */
+  section {
+    max-width: 780px; margin: 0 auto;
+    padding: 5rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 900; color: var(--cream); line-height: 1.4; margin-bottom: 0.75rem;
+  }
+  .section-title em { font-style: normal; color: var(--amber); }
+  .section-desc { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin-bottom: 2.5rem; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 75vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 50% 50% at 70% 30%, rgba(200,134,10,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 70%, rgba(42,109,181,0.05) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 780px; margin: 0 auto; width: 100%; position: relative; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--amber); text-transform: uppercase;
+    border: 1px solid rgba(200,134,10,0.3);
+    padding: 0.35rem 0.75rem; border-radius: 2px; margin-bottom: 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+  .hero-title {
+    font-family: var(--serif); font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900; line-height: 1.35; color: var(--cream); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+  .hero-title em { font-style: normal; color: var(--amber); }
+  .hero-sub {
+    font-size: 0.95rem; color: var(--text-dim); line-height: 1.8; max-width: 540px;
+    opacity: 0; animation: fadeUp 0.8s 0.6s ease forwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── WORRY CARDS ── */
+  .worry-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem; margin-bottom: 2rem;
+  }
+  .worry-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    padding: 1rem 1.1rem; font-size: 0.85rem; color: var(--text);
+    line-height: 1.6; display: flex; gap: 0.5rem; align-items: flex-start;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  }
+  .worry-mark { color: var(--text-dim); flex-shrink: 0; margin-top: 2px; }
+
+  /* ── TRUTH BOX ── */
+  .truth-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .truth-top {
+    background: linear-gradient(135deg, rgba(200,134,10,0.07), rgba(42,109,181,0.04));
+    padding: 1.75rem 2rem; border-bottom: 1px solid var(--border);
+  }
+  .truth-lead {
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .truth-text {
+    font-family: var(--serif); font-size: clamp(1rem, 2.5vw, 1.15rem);
+    font-weight: 700; color: var(--cream); line-height: 1.6;
+  }
+  .truth-text em { font-style: normal; color: var(--amber); }
+  .truth-body { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 0.9rem; }
+  .truth-item { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.85rem; color: var(--text); line-height: 1.65; }
+  .truth-item strong { color: var(--cream); font-family: var(--serif); }
+
+  /* ── PRICE STEPS ── */
+  .price-steps { display: flex; flex-direction: column; gap: 0; }
+  .price-step {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding: 1.75rem 0; border-bottom: 1px dashed var(--border); position: relative;
+  }
+  .price-step:last-child { border-bottom: none; }
+  .step-left { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+  .step-num {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--text-dim); text-transform: uppercase;
+  }
+  .step-badge {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 0.5rem 0.75rem; text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    min-width: 90px;
+  }
+  .step-badge .price {
+    font-family: var(--mono); font-size: 1.05rem; font-weight: 500; color: var(--amber);
+    display: block; line-height: 1.2;
+  }
+  .step-badge .price-sub {
+    font-size: 0.65rem; color: var(--text-dim); margin-top: 2px; display: block;
+  }
+  .step-right { flex: 1; padding-top: 0.1rem; }
+  .step-title {
+    font-family: var(--serif); font-weight: 700; font-size: 1rem;
+    color: var(--cream); margin-bottom: 0.5rem;
+  }
+  .step-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.65; }
+  .step-tag {
+    display: inline-block; margin-top: 0.6rem;
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.08em;
+    background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(200,134,10,0.2);
+    padding: 0.2rem 0.5rem; border-radius: 3px; text-transform: uppercase;
+  }
+
+  /* ── ESTIMATE BOX ── */
+  .estimate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .estimate-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.25rem 1.25rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+  }
+  .estimate-label {
+    font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .estimate-label.q { color: var(--red); }
+  .estimate-label.a { color: var(--green); }
+  .estimate-q { font-size: 0.85rem; color: var(--text); line-height: 1.6; font-style: italic; }
+  .estimate-a { font-size: 0.85rem; color: var(--text); line-height: 1.65; }
+  .estimate-a strong { color: var(--cream); }
+
+  /* ── MINDSET BOX ── */
+  .mindset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .mindset-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.25rem; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .mindset-icon { font-size: 1.4rem; }
+  .mindset-title {
+    font-family: var(--serif); font-weight: 700; font-size: 0.9rem; color: var(--cream);
+  }
+  .mindset-text { font-size: 0.82rem; color: var(--text-dim); line-height: 1.65; }
+
+  /* ── SUMMARY ── */
+  .summary-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .summary-top {
+    background: linear-gradient(135deg, rgba(200,134,10,0.07), rgba(42,109,181,0.05));
+    padding: 1.5rem; border-bottom: 1px solid var(--border); text-align: center;
+  }
+  .summary-top p {
+    font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+  .summary-top h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 700; color: var(--cream); }
+  .summary-items { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+  .summary-item { display: flex; gap: 1rem; align-items: flex-start; }
+  .summary-num {
+    font-family: var(--mono); font-size: 1.5rem; font-weight: 500;
+    color: var(--amber); flex-shrink: 0; line-height: 1; padding-top: 4px;
+  }
+  .summary-text strong { display: block; font-family: var(--serif); font-size: 0.95rem; color: var(--cream); margin-bottom: 0.2rem; }
+  .summary-text span { font-size: 0.82rem; color: var(--text-dim); }
+
+  /* ── QUOTE ── */
+  .quote-block {
+    border-left: 3px solid var(--amber); padding: 0.75rem 1.25rem;
+    background: var(--amber-dim); border-radius: 0 6px 6px 0;
+    font-family: var(--serif); font-size: 0.95rem; color: var(--cream);
+    line-height: 1.7; margin: 1.5rem 0;
+  }
+
+  footer {
+    border-top: 1px solid var(--border); padding: 2.5rem 2rem;
+    text-align: center; font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase;
+  }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 600px) {
+    section { padding: 3.5rem 1.25rem; }
+    .estimate-grid, .mindset-grid { grid-template-columns: 1fr; }
+    .price-step { flex-direction: column; gap: 0.75rem; }
+    .step-left { flex-direction: row; align-items: center; gap: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<nav>
+  <div class="dot"></div>
+  <span class="label">図解デザイナー講座 / 勉強会資料</span>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">◆ おまけ — 料金設計</div>
+    <h1 class="hero-title">
+      料金設定に、<em>正解はありません。</em><br>
+      だから、こう考える。
+    </h1>
+    <p class="hero-sub">
+      「いくらにすればいい？」「安すぎる？高すぎる？」<br>
+      その悩み、ほぼ全員が通る道です。今日は「正解」ではなく「最初の動き方」を渡します。
+    </p>
+  </div>
+</div>
+
+<!-- ── SECTION 01: よくある悩み ── -->
+<section>
+  <div class="section-num reveal">Section 01</div>
+  <h2 class="section-title reveal">みんなが悩むこと</h2>
+  <hr class="divider reveal">
+
+  <div class="worry-grid reveal">
+    <div class="worry-card"><span class="worry-mark">—</span><span>いくらに設定すればいいかわからない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>安すぎると思われたくない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>予算を書いてと言われたとき、何て答えるの？</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>他の人と比べて高い？安い？</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>値上げのタイミングがわからない</span></div>
+    <div class="worry-card"><span class="worry-mark">—</span><span>相場はあるの？</span></div>
+  </div>
+
+  <div class="truth-box reveal">
+    <div class="truth-top">
+      <div class="truth-lead">The Reality</div>
+      <div class="truth-text">
+        料金設定に「正解」はない。<br>
+        <em>正解は、試してから見えてくる。</em>
+      </div>
+    </div>
+    <div class="truth-body">
+      <div class="truth-item">
+        <span>→</span>
+        <span>「どうしたらいいですか？」と聞いても、明確な答えは誰も持っていません。<strong>相場感は、実際に案件をこなして初めてわかるもの</strong>だからです。</span>
+      </div>
+      <div class="truth-item">
+        <span>→</span>
+        <span>市場の価格は、出してみて反応を見て決まります。<strong>反応が薄ければ下げる。依頼が増えすぎたら上げる。</strong>それだけです。</span>
+      </div>
+      <div class="truth-item">
+        <span>→</span>
+        <span>だから今日渡したいのは「正解の価格」ではなく、<strong>「ごちゃごちゃ考えずに動き出すための最初の一手」</strong>です。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 02: スタート価格 ── -->
+<section>
+  <div class="section-num reveal">Section 02</div>
+  <h2 class="section-title reveal">スタートは<em>1枚500円</em>から</h2>
+  <p class="section-desc reveal">「安く売れ」ということではありません。「まず動き出すための初期装備」です。</p>
+  <hr class="divider reveal">
+
+  <div class="quote-block reveal">
+    1枚500円の意図は、やらないとわからない。<br>
+    価格は何でもいい。みんなが<strong>動き出せればOK</strong>。
+  </div>
+
+  <div class="truth-box reveal" style="margin-top: 1.5rem;">
+    <div class="truth-top">
+      <div class="truth-lead">駆け出し価格とは</div>
+      <div class="truth-text">
+        経験を積むために、<em>意図的に設定する価格</em>のこと。
+      </div>
+    </div>
+    <div class="truth-body">
+      <div class="truth-item">
+        <span>→</span>
+        <span><strong>クラウドワークスは「経験を買う場所」</strong>だと考えてください。最初に500円で受けた案件は、単に500円を稼いだのではなく、「次の案件を取るための実績と経験」に変わります。</span>
+      </div>
+      <div class="truth-item">
+        <span>→</span>
+        <span>500円でやってみないと、何がわかるかもわかりません。<strong>1回チャレンジすることに価値があります。</strong>考え方が伝われば、あとは自分で動き出せます。</span>
+      </div>
+      <div class="truth-item">
+        <span>→</span>
+        <span>クラウドワークスで経験を積んでいる間は、<strong>それだけで他の人より圧倒的に前に進んでいます。</strong>コツコツ続けている人は、周りが消えていくので自然とお仕事が集まってくるようになります。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 03: 価格の階段 ── -->
+<section>
+  <div class="section-num reveal">Section 03</div>
+  <h2 class="section-title reveal">価格が上がっていく<em>3つのステップ</em></h2>
+  <p class="section-desc reveal">「あなたは今ここ。次にこの価格帯に行くには、これをゲットしてください」が見えると安心できます。</p>
+  <hr class="divider reveal">
+
+  <div class="price-steps reveal">
+
+    <div class="price-step">
+      <div class="step-left">
+        <span class="step-num">Step 01</span>
+        <div class="step-badge">
+          <span class="price">500円〜</span>
+          <span class="price-sub">1枚あたり</span>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">動き出す。経験を積む。</div>
+        <div class="step-desc">
+          最初の3案件が目標です。この段階ではとにかく「1回やってみる」ことが最優先。価格よりも、案件の流れ・クライアントとのやり取り・納品までを一通り経験することに価値があります。
+        </div>
+        <span class="step-tag">目標: まず3案件</span>
+      </div>
+    </div>
+
+    <div class="price-step">
+      <div class="step-left">
+        <span class="step-num">Step 02</span>
+        <div class="step-badge">
+          <span class="price">800〜1,500円</span>
+          <span class="price-sub">1枚あたり</span>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">ポートフォリオが育ってきたら上げる</div>
+        <div class="step-desc">
+          実績が積まれ、ポートフォリオに見せられる作品が増えてきたタイミングで値上げを検討します。「図解スライド」と「文字スライド」では難易度が違うので、種類ごとに価格を分けて設定するのも効果的です。依頼が多く来るようになったら、それが「上げ時」のサインです。
+        </div>
+        <span class="step-tag">目安: ポートフォリオ10本〜</span>
+      </div>
+    </div>
+
+    <div class="price-step">
+      <div class="step-left">
+        <span class="step-num">Step 03</span>
+        <div class="step-badge">
+          <span class="price">プロジェクト</span>
+          <span class="price-sub">案件単位</span>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="step-title">SNSから問い合わせが来るようになったら</div>
+        <div class="step-desc">
+          「1枚いくら」ではなく「このプロジェクト全体でいくら」という見せ方に変わっていきます。SNSやX経由で問い合わせが来るようになるまで、早くて半年、平均1年くらいが目安です。それまでは今の価格帯でも、経験値は確実に積まれています。
+        </div>
+        <span class="step-tag">目安: SNS発信から半年〜1年</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SECTION 04: 見積もりを聞かれたとき ── -->
+<section>
+  <div class="section-num reveal">Section 04</div>
+  <h2 class="section-title reveal">「予算を教えてください」と<em>言われたら</em></h2>
+  <hr class="divider reveal">
+
+  <div class="estimate-grid reveal">
+
+    <div class="estimate-card">
+      <div class="estimate-label q">Q — よくある状況</div>
+      <div class="estimate-q">「応募時に予算を記入してください」と言われた。ポートフォリオの価格で出していいの？</div>
+    </div>
+    <div class="estimate-card">
+      <div class="estimate-label a">A — 答え方</div>
+      <div class="estimate-a"><strong>ポートフォリオに載せている価格で出してOKです。</strong>1回出してみて、反応を見てください。失敗しながら相場感を掴んでいきます。</div>
+    </div>
+
+    <div class="estimate-card">
+      <div class="estimate-label q">Q — よくある状況</div>
+      <div class="estimate-q">「何枚で何円ですか？」と聞かれたけど、枚数が確定していない…</div>
+    </div>
+    <div class="estimate-card">
+      <div class="estimate-label a">A — 答え方</div>
+      <div class="estimate-a">枚数は案件が進まないと確定しません。<strong>「20枚程度でしたら◯円〜◯円ほどです」という幅で伝えてください。</strong>パッケージ例を用意しておくと答えやすくなります。</div>
+    </div>
+
+    <div class="estimate-card">
+      <div class="estimate-label q">Q — よくある状況</div>
+      <div class="estimate-q">「高い」と言われた。やっぱり下げた方がいい？</div>
+    </div>
+    <div class="estimate-card">
+      <div class="estimate-label a">A — 答え方</div>
+      <div class="estimate-a">1万円でも高いと言う人は言います。<strong>「高い」と言う人は最初からターゲットではない</strong>と割り切ってOK。ただ複数回言われるなら、価格か案件選びを見直すサインです。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SECTION 05: マインドセット ── -->
+<section>
+  <div class="section-num reveal">Section 05</div>
+  <h2 class="section-title reveal">持っておきたい<em>4つの考え方</em></h2>
+  <hr class="divider reveal">
+
+  <div class="mindset-grid reveal">
+    <div class="mindset-card">
+      <div class="mindset-icon">🪜</div>
+      <div class="mindset-title">価格は「今」じゃなく「次」に上げればいい</div>
+      <div class="mindset-text">最初の価格が永遠に続くわけではありません。実績が積まれたら上げる。それだけです。最初から高単価を目指して動けなくなるより、500円で動き出した人の方が結果的に前に進みます。</div>
+    </div>
+    <div class="mindset-card">
+      <div class="mindset-icon">📊</div>
+      <div class="mindset-title">需要と供給で決まる</div>
+      <div class="mindset-text">依頼が多すぎたら上げる。来なくなったら下げる。これが市場の仕組みです。自分の価格が「適切か」は、出してみないとわかりません。まず試すことが唯一の答えです。</div>
+    </div>
+    <div class="mindset-card">
+      <div class="mindset-icon">🏪</div>
+      <div class="mindset-title">クラウドワークスは「経験を買う場所」</div>
+      <div class="mindset-text">最初のステージです。ここで安売りしているのではなく、次のステージに進むための経験値を積んでいる。そのマインドセットで取り組むと、1案件1案件の意味が変わります。</div>
+    </div>
+    <div class="mindset-card">
+      <div class="mindset-icon">⏳</div>
+      <div class="mindset-title">料金表が「見られる」まで時間がかかる</div>
+      <div class="mindset-text">クライアントが本気で頼もうとした時しか料金表を見ません。SNSから問い合わせが来るようになるまで平均1年。それまでの経験が土台になります。焦らず続けることが一番の近道です。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 06: まとめ ── -->
+<section>
+  <div class="section-num reveal">Section 06</div>
+  <h2 class="section-title reveal">このパートのまとめ</h2>
+  <hr class="divider reveal">
+
+  <div class="summary-box reveal">
+    <div class="summary-top">
+      <p>Key Takeaways</p>
+      <h3>今日から動けるための3つのこと</h3>
+    </div>
+    <div class="summary-items">
+      <div class="summary-item">
+        <span class="summary-num">01</span>
+        <div class="summary-text">
+          <strong>まず1枚500円で動き出す</strong>
+          <span>正解の価格を探すより、1案件こなす方が100倍早く相場感がつかめます。考えすぎず、出してみてください。</span>
+        </div>
+      </div>
+      <div class="summary-item">
+        <span class="summary-num">02</span>
+        <div class="summary-text">
+          <strong>「高い」と言われたら、その人はターゲットではない</strong>
+          <span>複数回言われるなら案件選びを見直す。1回言われただけなら気にしない。需要と供給を試しているだけです。</span>
+        </div>
+      </div>
+      <div class="summary-item">
+        <span class="summary-num">03</span>
+        <div class="summary-text">
+          <strong>価格より「継続」が最強</strong>
+          <span>コツコツやっていると、まわりが自然と消えていきます。続けた人にお仕事が集まる構造です。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-block reveal" style="margin-top: 2rem;">
+    ごちゃごちゃ考えずに済むようにしたい。<br>
+    価格は何でもいい。<strong>みんなが動き出せればOK。</strong>
+  </div>
+</section>
+
+<footer>
+  図解デザイナー講座 &nbsp;|&nbsp; 勉強会資料 &nbsp;|&nbsp; おまけ — 料金設計
+  <div style="margin-top:1rem; display:flex; justify-content:center; gap:1.5rem;">
+    <a href="index.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">← Part 01: 詐欺案件の地図</a>
+    <a href="part2.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">← Part 02: 応募文ワーク</a>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('progress-bar').style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

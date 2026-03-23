@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>詐欺案件の地図 | 図解デザイナー講座</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Noto+Sans+JP:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg:        #f0edea;
+    --bg2:       #e8e4e0;
+    --bg3:       #dedad5;
+    --border:    rgba(0,0,0,0.08);
+    --amber:     #c8860a;
+    --amber-dim: rgba(200,134,10,0.1);
+    --red:       #c04040;
+    --red-dim:   rgba(192,64,64,0.08);
+    --green:     #2e9469;
+    --green-dim: rgba(46,148,105,0.08);
+    --cream:     #1c1814;
+    --text:      #3a3530;
+    --text-dim:  rgba(58,53,48,0.5);
+    --serif:     'Noto Serif JP', serif;
+    --sans:      'Noto Sans JP', sans-serif;
+    --mono:      'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--amber), var(--red));
+    z-index: 100;
+    transition: width 0.1s linear;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 90;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: linear-gradient(to bottom, rgba(240,237,234,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+  }
+  nav .label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  nav .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 80% 20%, rgba(200,134,10,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 10% 80%, rgba(192,64,64,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    border: 1px solid rgba(245,166,35,0.3);
+    padding: 0.35rem 0.75rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--amber);
+    position: relative;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--text-dim);
+    max-width: 540px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s ease forwards;
+  }
+
+  .hero-quote {
+    border-left: 2px solid var(--red);
+    padding: 0.75rem 1.25rem;
+    background: var(--red-dim);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s ease forwards;
+  }
+
+  .hero-quote strong { color: #e07070; }
+
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s ease forwards;
+  }
+  .scroll-hint span {
+    display: inline-block;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-desc {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-bottom: 2.5rem;
+  }
+
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--amber);
+    margin: 1.25rem 0 2.5rem;
+    border: none;
+  }
+
+  /* ── PREMISE CARDS ── */
+  .premise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .premise-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .premise-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  .premise-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .premise-heading {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--cream);
+    margin-bottom: 0.4rem;
+  }
+
+  .premise-text {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .premise-highlight {
+    grid-column: 1 / -1;
+    background: var(--amber-dim);
+    border: 1px solid rgba(200,134,10,0.2);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--amber);
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ── WARNING SIGNS ── */
+  .warning-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .warning-item {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .warning-item:hover { background: var(--bg3); border-left-color: var(--amber); }
+  .warning-item.open { border-left-color: var(--amber); }
+
+  .warning-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+  }
+
+  .warning-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    width: 20px;
+  }
+
+  .warning-label {
+    font-size: 0.85rem;
+    color: var(--red);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .warning-title {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--cream);
+    flex: 1;
+  }
+
+  .warning-chevron {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+  }
+  .warning-item.open .warning-chevron { transform: rotate(180deg); }
+
+  .warning-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .warning-item.open .warning-body { max-height: 200px; }
+
+  .warning-body-inner {
+    padding: 0 1.25rem 1.25rem 4rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.8;
+    border-top: 1px solid var(--border);
+    padding-top: 0.9rem;
+    margin-top: 0;
+  }
+
+  .warning-body-inner strong { color: var(--amber); }
+
+  /* ── PATTERN GRID ── */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .pattern-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .pattern-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    border-radius: 0 6px 0 100%;
+    background: var(--red-dim);
+  }
+
+  .pattern-card:hover { transform: translateY(-2px); border-color: rgba(224,82,82,0.3); }
+
+  .pattern-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+
+  .pattern-name {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+  }
+
+  .pattern-text {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .pattern-badge {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .pattern-badge.most   { background: rgba(224,82,82,0.2); color: var(--red); }
+  .pattern-badge.warn   { background: var(--amber-dim); color: var(--amber); }
+  .pattern-badge.danger { background: rgba(224,82,82,0.15); color: var(--red); }
+
+  /* ── CHECKLIST ── */
+  .checklist-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .checklist-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .checklist-title-small {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .checklist-counter {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--amber);
+  }
+
+  .checklist-counter span {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .checklist-items { padding: 0.5rem 0; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.85rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: rgba(0,0,0,0.04); }
+
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid rgba(0,0,0,0.3);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+    font-size: 0.7rem;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  .check-text {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.6;
+    transition: color 0.15s;
+  }
+
+  .check-item.checked .check-text {
+    color: var(--text-dim);
+    text-decoration: line-through;
+  }
+
+  .checklist-result {
+    margin: 0 1.5rem 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    display: none;
+    line-height: 1.7;
+  }
+
+  .result-danger {
+    background: var(--red-dim);
+    border: 1px solid rgba(224,82,82,0.25);
+    color: #e07070;
+    display: block;
+  }
+
+  .result-caution {
+    background: var(--amber-dim);
+    border: 1px solid rgba(245,166,35,0.25);
+    color: var(--amber);
+    display: block;
+  }
+
+  .result-safe {
+    background: var(--green-dim);
+    border: 1px solid rgba(79,187,138,0.25);
+    color: var(--green);
+    display: block;
+  }
+
+  /* ── SAFE POINTS ── */
+  .safe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .safe-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--green-dim);
+    border: 1px solid rgba(79,187,138,0.15);
+    border-left: 3px solid var(--green);
+    border-radius: 4px;
+    font-size: 0.88rem;
+    color: var(--text);
+    transition: background 0.2s;
+  }
+
+  .safe-item:hover { background: rgba(79,187,138,0.12); }
+
+  .safe-icon { color: var(--green); flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+
+  /* ── SUMMARY ── */
+  .summary-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .summary-top {
+    background: linear-gradient(135deg, rgba(245,166,35,0.08), rgba(224,82,82,0.06));
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .summary-top p {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-top h3 {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .summary-items {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .summary-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .summary-num {
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--amber);
+    flex-shrink: 0;
+    line-height: 1;
+    padding-top: 4px;
+  }
+
+  .summary-text strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+
+  .summary-text span {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .premise-grid { grid-template-columns: 1fr; }
+    .pattern-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 1.8rem; }
+    section { padding: 3.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="dot"></div>
+  <span class="label">図解デザイナー講座 / 勉強会資料</span>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <span>◆</span>
+      <span>Part 01 — 詐欺案件の地図</span>
+    </div>
+    <h1 class="hero-title">
+      「全部詐欺に<em>見えてきた</em>」<br>
+      そのまま動けなくなるのが<br>
+      一番もったいない。
+    </h1>
+    <p class="hero-sub">
+      知識を持って動けば、在宅ワークはとても豊かな選択肢になります。<br>
+      このパートのゴールは「詐欺に詳しくなること」ではなく、<br>
+      <strong style="color: var(--cream);">「安心して応募できるようになること」</strong>です。
+    </p>
+    <blockquote class="hero-quote">
+      💬 「30件応募しても連絡が来ない」「怖くて応募できなくなってきた」<br>
+      <strong>— 受講生の日報より</strong>
+    </blockquote>
+    <div class="scroll-hint">
+      <span>↓</span>
+      <span>scroll to explore</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 01: 前提 ── -->
+<section>
+  <div class="section-num reveal">Section 01</div>
+  <h2 class="section-title reveal">まず「前提」を知っておこう</h2>
+  <hr class="divider reveal">
+  <div class="premise-grid reveal">
+    <div class="premise-card">
+      <div class="premise-icon">💡</div>
+      <div class="premise-heading">完全に見抜くのは無理</div>
+      <div class="premise-text">どんなに注意しても100%は難しい。でも「確率を下げる」ことはできる。</div>
+    </div>
+    <div class="premise-card">
+      <div class="premise-icon">💡</div>
+      <div class="premise-heading">取り締まりを待っても解決しない</div>
+      <div class="premise-text">プラットフォーム側の対応を待つよりも、自分で身を守る知識を持つことが大切。</div>
+    </div>
+    <div class="premise-card">
+      <div class="premise-icon">💡</div>
+      <div class="premise-heading">まともな案件もちゃんとある</div>
+      <div class="premise-text">詐欺が怖くて応募を諦めるのが一番もったいない。素敵なクライアントさんも本当にたくさんいる。</div>
+    </div>
+    <div class="premise-card">
+      <div class="premise-icon">💡</div>
+      <div class="premise-heading">ターゲットは初心者・駆け出し</div>
+      <div class="premise-text">特にデザイン・AI・ライター系の初心者が狙われやすい。低単価案件ほど多い傾向がある。</div>
+    </div>
+    <div class="premise-highlight">
+      知っておけば怖くない。正しく見極めれば、安心して動ける。
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 02: 怪しいサイン ── -->
+<section>
+  <div class="section-num reveal">Section 02</div>
+  <h2 class="section-title reveal">怪しい募集文の「5つのサイン」</h2>
+  <p class="section-desc reveal">アカウントの評価より、募集文・募集条件にサインが出やすいのが最近の傾向。</p>
+  <hr class="divider reveal">
+
+  <div class="warning-list">
+    <div class="warning-item reveal" onclick="toggleWarning(this)">
+      <div class="warning-header">
+        <span class="warning-num">01</span>
+        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-title">「初心者歓迎」が強調されている</span>
+        <span class="warning-chevron">▼</span>
+      </div>
+      <div class="warning-body">
+        <div class="warning-body-inner">
+          <strong>なぜ危険？</strong> 本当に仕事をお願いしたい場合、初心者かどうかより「できるかどうか」を見ます。タイトルに強調されている場合は、稼げていない現実に不安を感じている人を集めるための言葉です。
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-item reveal reveal-delay-1" onclick="toggleWarning(this)">
+      <div class="warning-header">
+        <span class="warning-num">02</span>
+        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-title">「将来どうなりたい？」を聞いてくる</span>
+        <span class="warning-chevron">▼</span>
+      </div>
+      <div class="warning-body">
+        <div class="warning-body-inner">
+          <strong>なぜ危険？</strong> 仕事の依頼なら「得意なソフトは？」「週何時間作業できますか？」が自然。理想と現実のギャップを広げてセールスするための質問です。
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-item reveal reveal-delay-2" onclick="toggleWarning(this)">
+      <div class="warning-header">
+        <span class="warning-num">03</span>
+        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-title">「FB付き」が特典として書かれている</span>
+        <span class="warning-chevron">▼</span>
+      </div>
+      <div class="warning-body">
+        <div class="warning-body-inner">
+          <strong>なぜ危険？</strong> 普通の仕事に修正・フィードバックがあるのは当たり前。それをわざわざ「特典」として書くのは不自然で、仕事ではなく教育（講座）の匂いがします。
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-item reveal reveal-delay-1" onclick="toggleWarning(this)">
+      <div class="warning-header">
+        <span class="warning-num">04</span>
+        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-title">単価がちょっとだけ高い（300〜500円）</span>
+        <span class="warning-chevron">▼</span>
+      </div>
+      <div class="warning-body">
+        <div class="warning-body-inner">
+          <strong>なぜ危険？</strong> 低すぎると誰も応募しない。「応募したくなるライン」に絶妙に設定されています。本当にいい案件はテスト単価が低くても、継続で上がっていく流れがある。
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-item reveal reveal-delay-2" onclick="toggleWarning(this)">
+      <div class="warning-header">
+        <span class="warning-num">05</span>
+        <span class="warning-label">⚠ SIGN</span>
+        <span class="warning-title">「自由な働き方・継続・高評価」を強調</span>
+        <span class="warning-chevron">▼</span>
+      </div>
+      <div class="warning-body">
+        <div class="warning-body-inner">
+          <strong>なぜ危険？</strong> 仕事の内容ではなく「未来の生活」を売っています。この手の言葉が並ぶ募集文は、仕事を依頼したいのではなく、コンタクトを取ることが目的の可能性が高い。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 03: 実際のパターン ── -->
+<section>
+  <div class="section-num reveal">Section 03</div>
+  <h2 class="section-title reveal">受講生が遭遇したリアル</h2>
+  <p class="section-desc reveal">実際に被害・遭遇した体験談をパターン化しました。</p>
+  <hr class="divider reveal">
+
+  <div class="pattern-grid">
+    <div class="pattern-card reveal">
+      <div class="pattern-num">Pattern 01</div>
+      <div class="pattern-name">Zoom面談で<br>講座を勧誘される</div>
+      <div class="pattern-text">「一度お話しましょう」からZoomへ。威圧的なセールスでその場で申し込みを迫られる。</div>
+      <span class="pattern-badge most">最多パターン</span>
+    </div>
+    <div class="pattern-card reveal reveal-delay-1">
+      <div class="pattern-num">Pattern 02</div>
+      <div class="pattern-name">個人情報を<br>根掘り葉掘り聞かれる</div>
+      <div class="pattern-text">家族構成・都道府県・スクール名など、仕事と無関係な質問が続く。</div>
+      <span class="pattern-badge warn">要警戒</span>
+    </div>
+    <div class="pattern-card reveal reveal-delay-1">
+      <div class="pattern-num">Pattern 03</div>
+      <div class="pattern-name">仮払いなしで<br>連絡が途絶える</div>
+      <div class="pattern-text">作業してから仮払いを待っていたら、突然連絡が取れなくなる。</div>
+      <span class="pattern-badge danger">直接被害</span>
+    </div>
+    <div class="pattern-card reveal reveal-delay-2">
+      <div class="pattern-num">Pattern 04</div>
+      <div class="pattern-name">アカウントを<br>貸すよう言われる</div>
+      <div class="pattern-text">「代わりに作業を受注したい」などを理由にアカウント提供を求められる。</div>
+      <span class="pattern-badge danger">絶対NG</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 04: チェックリスト ── -->
+<section>
+  <div class="section-num reveal">Section 04</div>
+  <h2 class="section-title reveal">応募前チェックリスト</h2>
+  <p class="section-desc reveal">気になる案件に当てはめてみてください。チェックが多いほど要注意。</p>
+  <hr class="divider reveal">
+
+  <div class="checklist-wrap reveal">
+    <div class="checklist-header">
+      <span class="checklist-title-small">Checklist — 応募前に確認</span>
+      <span class="checklist-counter">チェック数: <span id="count">0</span> / 7</span>
+    </div>
+    <div class="checklist-items" id="checklist">
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">「初心者歓迎」がタイトルや本文で強調されている</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">応募フォームや最初のメッセージで「将来の目標・理想の働き方」を聞いてくる</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">「丁寧にFBします」「成長できます」が特典として書かれている</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">依頼者の完了実績がゼロまたは極端に少ない</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">「20代限定」「既婚者不可」など生活スタイルを限定している</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">仮払いが確認できる前に作業開始を促してくる</div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="check-text">アカウントの提供・共有を採用条件にしている</div>
+      </div>
+    </div>
+    <div class="checklist-result" id="result-danger">
+      🚨 <strong>3個以上：いったん保留。</strong> 質問部屋に持ってきてください。一人で判断しなくて大丈夫です。
+    </div>
+    <div class="checklist-result" id="result-caution">
+      ⚠️ <strong>1〜2個：様子見。</strong> 仮払いが確認できるまでは絶対に作業を始めないこと。
+    </div>
+    <div class="checklist-result" id="result-safe">
+      ✅ <strong>0個：問題なさそう。</strong> 次のポイント（安全な案件の見分け方）も合わせて確認してみてください。
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 05: 安全な案件 ── -->
+<section>
+  <div class="section-num reveal">Section 05</div>
+  <h2 class="section-title reveal">安全な案件の見分け方</h2>
+  <p class="section-desc reveal">「詐欺かどうか」で見るより、「これが揃っているか」で判断するとラクになります。</p>
+  <hr class="divider reveal">
+
+  <div class="safe-list">
+    <div class="safe-item reveal">
+      <span class="safe-icon">✓</span>
+      <span>仕事の内容・納期・報酬が<strong style="color:var(--green)">具体的に書かれている</strong></span>
+    </div>
+    <div class="safe-item reveal reveal-delay-1">
+      <span class="safe-icon">✓</span>
+      <span>依頼者の<strong style="color:var(--green)">完了実績・評価</strong>がある</span>
+    </div>
+    <div class="safe-item reveal reveal-delay-1">
+      <span class="safe-icon">✓</span>
+      <span>質問が<strong style="color:var(--green)">仕事に直結している</strong>（得意ソフト・稼働時間など）</span>
+    </div>
+    <div class="safe-item reveal reveal-delay-2">
+      <span class="safe-icon">✓</span>
+      <span><strong style="color:var(--green)">仮払いが早い</strong>、または仮払い手順を明示している</span>
+    </div>
+    <div class="safe-item reveal reveal-delay-2">
+      <span class="safe-icon">✓</span>
+      <span>コミュニケーションが<strong style="color:var(--green)">丁寧・具体的</strong>で、急かしてこない</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 06: まとめ ── -->
+<section>
+  <div class="section-num reveal">Section 06</div>
+  <h2 class="section-title reveal">3点だけ覚えて帰ってください</h2>
+  <hr class="divider reveal">
+
+  <div class="summary-box reveal">
+    <div class="summary-top">
+      <p>Key Takeaways</p>
+      <h3>このパートのまとめ</h3>
+    </div>
+    <div class="summary-items">
+      <div class="summary-item reveal">
+        <span class="summary-num">01</span>
+        <div class="summary-text">
+          <strong>「初心者歓迎 ＋ 将来の夢質問 ＋ FB付き」の3点セットは要警戒</strong>
+          <span>1つなら様子見でOK。3つ揃ったら迷わず保留にして相談を。</span>
+        </div>
+      </div>
+      <div class="summary-item reveal reveal-delay-1">
+        <span class="summary-num">02</span>
+        <div class="summary-text">
+          <strong>仮払い前は絶対に作業しない</strong>
+          <span>どんなに急かされても、これだけは守ってください。ルールではなく、自分を守るため。</span>
+        </div>
+      </div>
+      <div class="summary-item reveal reveal-delay-2">
+        <span class="summary-num">03</span>
+        <div class="summary-text">
+          <strong>引っかかっても自分を責めない・一人で抱え込まない</strong>
+          <span>相手はプロの詐欺師です。おかしいと思ったらすぐ質問部屋へ。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  図解デザイナー講座 &nbsp;|&nbsp; 勉強会資料 &nbsp;|&nbsp; Part 01 — 詐欺案件の地図
+  <div style="margin-top:1rem; display:flex; justify-content:center; gap:1.5rem;">
+    <a href="part2.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">→ Part 02: 応募文ワーク</a>
+    <a href="part3.html" style="font-size:0.75rem; color:inherit; text-decoration:underline; letter-spacing:0.08em;">→ おまけ: 料金設計</a>
+  </div>
+</footer>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct   = (window.scrollY / total) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Warning accordion
+  function toggleWarning(el) {
+    el.classList.toggle('open');
+  }
+
+  // Checklist
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    updateResult();
+  }
+
+  function updateResult() {
+    const items  = document.querySelectorAll('.check-item');
+    const count  = [...items].filter(i => i.classList.contains('checked')).length;
+    document.getElementById('count').textContent = count;
+
+    const rd = document.getElementById('result-danger');
+    const rc = document.getElementById('result-caution');
+    const rs = document.getElementById('result-safe');
+
+    rd.className = 'checklist-result';
+    rc.className = 'checklist-result';
+    rs.className = 'checklist-result';
+
+    if      (count >= 3) rd.className = 'checklist-result result-danger';
+    else if (count >= 1) rc.className = 'checklist-result result-caution';
+    else                 rs.className = 'checklist-result result-safe';
+  }
+</script>
+</body>
+</html>
